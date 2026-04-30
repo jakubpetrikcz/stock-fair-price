@@ -1,42 +1,59 @@
 import { useEffect } from 'react';
+import { FMP_API_BASE_URL } from '../constants';
+import { roundToMillions } from '../utils/roundToMillions';
 
-export const useFetchBalanceSheet = (stop: boolean) => {
+export const useFetchBalanceSheet = (
+  stop: boolean,
+  ticker: string,
+  setFinancials: React.Dispatch<any>,
+) => {
   useEffect(() => {
     if (stop) {
       return;
     }
+
     const fetchBalanceSheet = async () => {
       try {
         const response = await fetch(
-          `https://financialmodelingprep.com/stable/balance-sheet-statement?symbol=META&apikey=${import.meta.env.VITE_FMP_API_KEY}`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          },
+          `${FMP_API_BASE_URL}/balance-sheet-statement?symbol=${ticker}&apikey=${import.meta.env.VITE_FMP_API_KEY}`,
         );
         const data = await response.json();
-        const cashEquivalents = Number(
-          (Math.round(data[0].cashAndShortTermInvestments) / 1000000).toFixed(
-            3,
-          ),
+        const cashEquivalents = roundToMillions(
+          data[0].cashAndShortTermInvestments,
         );
-        const totalDebt = Number(
-          (
-            Math.round(data[0].shortTermDebt + data[0].longTermDebt) / 1000000
-          ).toFixed(3),
+        const totalDebt = roundToMillions(
+          data[0].shortTermDebt + data[0].longTermDebt,
         );
-        localStorage.setItem(
-          'cashEquivalents',
-          JSON.stringify(cashEquivalents),
+
+        const financials = JSON.parse(
+          localStorage.getItem('financials') || '{}',
         );
-        localStorage.setItem('totalDebt', JSON.stringify(totalDebt));
+
+        const balanceSheetsLS = {
+          ...financials,
+          [ticker]: {
+            ...financials[ticker],
+            cashEquivalents,
+            totalDebt,
+          },
+        };
+
+        setFinancials((prev) => {
+          return {
+            ...prev,
+            [ticker]: {
+              ...prev[ticker],
+              cashEquivalents,
+              totalDebt,
+            },
+          };
+        });
+        localStorage.setItem('financials', JSON.stringify(balanceSheetsLS));
       } catch {
         /* empty */
       }
     };
 
     fetchBalanceSheet();
-  }, [stop]);
+  }, [setFinancials, stop, ticker]);
 };

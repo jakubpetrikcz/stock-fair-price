@@ -1,33 +1,53 @@
 import { useEffect } from 'react';
+import { FMP_API_BASE_URL } from '../constants';
+import { roundToMillions } from '../utils/roundToMillions';
 
-export const useFetchCashFlow = (stop: boolean) => {
+export const useFetchCashFlow = (
+  stop: boolean,
+  ticker: string,
+  setFinancials: React.Dispatch<any>,
+) => {
   useEffect(() => {
     if (stop) {
       return;
     }
+
     const fetchCashFlow = async () => {
       try {
         const response = await fetch(
-          `https://financialmodelingprep.com/stable/cash-flow-statement?symbol=META&limit=5&apikey=${import.meta.env.VITE_FMP_API_KEY}`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          },
+          `${FMP_API_BASE_URL}/cash-flow-statement?symbol=${ticker}&limit=5&apikey=${import.meta.env.VITE_FMP_API_KEY}`,
         );
         const data = await response.json();
         const cashFlowsData = data
-          .map((item) =>
-            Number((Math.round(item.freeCashFlow) / 1000000).toFixed(3)),
-          )
+          .map((item) => roundToMillions(item.freeCashFlow))
           .reverse();
-        localStorage.setItem('cashFlows', JSON.stringify(cashFlowsData));
+
+        const financials = JSON.parse(
+          localStorage.getItem('financials') || '{}',
+        );
+
+        const cashFlowsLS = {
+          ...financials,
+          [ticker]: {
+            ...financials[ticker],
+            cashFlowsData,
+          },
+        };
+        setFinancials((prev) => {
+          return {
+            ...prev,
+            [ticker]: {
+              ...prev[ticker],
+              cashFlowsData,
+            },
+          };
+        });
+        localStorage.setItem('financials', JSON.stringify(cashFlowsLS));
       } catch {
         /* empty */
       }
     };
 
     fetchCashFlow();
-  }, [stop]);
+  }, [setFinancials, stop, ticker]);
 };
