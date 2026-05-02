@@ -4,4 +4,5 @@ td {
   padding-block: 5px;
   text-align: center;
   border: 1px solid black;
+  white-space: nowrap;
 }

@@ -8,8 +8,9 @@ export const calculateDcfFairPrice = (
   cashEquivalents: number,
   totalDebt: number,
   sharesOutstanding: number,
+  userGrowthRate: number,
 ) => {
-  const futureFCFs = getFutureFcfs(cashFlows);
+  const futureFCFs = getFutureFcfs(cashFlows, userGrowthRate);
 
   const { terminalValuePVOfFFCF } = getTerminalValue(futureFCFs.future);
 

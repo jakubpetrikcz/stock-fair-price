@@ -1,8 +1,6 @@
 import { USER_DISCOUNT_RATE } from './calculateDcfFairPrice';
 
-const USER_GROWTH_RATE = 0.1;
-
-export const getFutureFcfs = (cashFlows: number[]) => {
+export const getFutureFcfs = (cashFlows: number[], userGrowthRate: number) => {
   const lastValue = cashFlows[cashFlows.length - 1];
 
   const futureFCFs: Record<string, number[]> = {
@@ -14,7 +12,7 @@ export const getFutureFcfs = (cashFlows: number[]) => {
     const nextFCF = Number(
       (
         futureFCFs.future[futureFCFs.future.length - 1] *
-        (1 + USER_GROWTH_RATE)
+        (1 + userGrowthRate)
       ).toFixed(3),
     );
     futureFCFs.future.push(nextFCF);
