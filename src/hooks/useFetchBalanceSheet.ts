@@ -1,11 +1,12 @@
-import { useEffect } from 'react';
-import { FMP_API_BASE_URL } from '../constants';
+import { useEffect, type Dispatch, type SetStateAction } from 'react';
+import { FINANCIALS_LS_KEY, FMP_API_BASE_URL } from '../constants';
 import { roundToMillions } from '../utils/roundToMillions';
+import type { FinancialType } from '../features/dcf/types';
 
 export const useFetchBalanceSheet = (
   stop: boolean,
   ticker: string,
-  setFinancials: React.Dispatch<any>,
+  setFinancials: Dispatch<SetStateAction<FinancialType>>,
 ) => {
   useEffect(() => {
     if (stop) {
@@ -26,7 +27,7 @@ export const useFetchBalanceSheet = (
         );
 
         const financials = JSON.parse(
-          localStorage.getItem('financials') || '{}',
+          localStorage.getItem(FINANCIALS_LS_KEY) || '{}',
         );
 
         const balanceSheetsLS = {
@@ -48,7 +49,10 @@ export const useFetchBalanceSheet = (
             },
           };
         });
-        localStorage.setItem('financials', JSON.stringify(balanceSheetsLS));
+        localStorage.setItem(
+          FINANCIALS_LS_KEY,
+          JSON.stringify(balanceSheetsLS),
+        );
       } catch {
         /* empty */
       }

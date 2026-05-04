@@ -1,4 +1,4 @@
-import { getTerminalValue } from '../../../utils/getTerminalValue';
+import { getTerminalValue } from '../utils/getTerminalValue';
 
 type FutureFcfTableProps = {
   futureFcf: number[];
@@ -16,7 +16,6 @@ export const FutureFcfTable = ({
     <table
       style={{
         marginTop: 20,
-        borderCollapse: 'collapse',
         width: '100%',
       }}
     >

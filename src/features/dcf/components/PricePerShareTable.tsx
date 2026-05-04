@@ -1,4 +1,4 @@
-import { calculateDcfFairPrice } from '../../../utils/calculateDcfFairPrice';
+import { calculateDcfFairPrice } from '../utils/calculateDcfFairPrice';
 
 type PricePerShareTableProps = {
   pvOfFFCF: number[];
@@ -39,7 +39,6 @@ export const PricePerShareTable = ({
     <table
       style={{
         marginTop: 20,
-        borderCollapse: 'collapse',
       }}
     >
       <tbody>

@@ -1,11 +1,17 @@
-import { useEffect } from 'react';
-import { FMP_API_BASE_URL } from '../constants';
+import { useEffect, type Dispatch, type SetStateAction } from 'react';
+import { FINANCIALS_LS_KEY, FMP_API_BASE_URL } from '../constants';
 import { roundToMillions } from '../utils/roundToMillions';
+import type { FinancialType } from '../features/dcf/types';
+
+type CashFlowStatementData = {
+  freeCashFlow: number;
+  [key: string]: unknown;
+};
 
 export const useFetchCashFlow = (
   stop: boolean,
   ticker: string,
-  setFinancials: React.Dispatch<any>,
+  setFinancials: Dispatch<SetStateAction<FinancialType>>,
 ) => {
   useEffect(() => {
     if (stop) {
@@ -19,11 +25,13 @@ export const useFetchCashFlow = (
         );
         const data = await response.json();
         const cashFlowsData = data
-          .map((item) => roundToMillions(item.freeCashFlow))
+          .map((item: CashFlowStatementData) =>
+            roundToMillions(item.freeCashFlow),
+          )
           .reverse();
 
         const financials = JSON.parse(
-          localStorage.getItem('financials') || '{}',
+          localStorage.getItem(FINANCIALS_LS_KEY) || '{}',
         );
 
         const cashFlowsLS = {
@@ -42,7 +50,7 @@ export const useFetchCashFlow = (
             },
           };
         });
-        localStorage.setItem('financials', JSON.stringify(cashFlowsLS));
+        localStorage.setItem(FINANCIALS_LS_KEY, JSON.stringify(cashFlowsLS));
       } catch {
         /* empty */
       }

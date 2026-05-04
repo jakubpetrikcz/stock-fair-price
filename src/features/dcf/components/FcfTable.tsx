@@ -1,15 +1,20 @@
 import type { Dispatch, SetStateAction, KeyboardEvent } from 'react';
-import { getGrowthRate } from '../../../utils/getGrowthRate';
+import { getGrowthRate } from '../utils/getGrowthRate';
 
 const blockInvalidChar = (e: KeyboardEvent<HTMLInputElement>) =>
   ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
 
 type FcfTableProps = {
   cashFlows: number[];
-  setUserGrowthRate: Dispatch<SetStateAction<number>>;
+  userGrowthRate: string | number;
+  setUserGrowthRate: Dispatch<SetStateAction<string | number>>;
 };
 
-export const FcfTable = ({ cashFlows, setUserGrowthRate }: FcfTableProps) => {
+export const FcfTable = ({
+  cashFlows,
+  userGrowthRate,
+  setUserGrowthRate,
+}: FcfTableProps) => {
   const { growths, averageGrowthRate } = getGrowthRate(cashFlows);
 
   return (
@@ -17,7 +22,6 @@ export const FcfTable = ({ cashFlows, setUserGrowthRate }: FcfTableProps) => {
       <table
         style={{
           marginTop: 100,
-          borderCollapse: 'collapse',
           width: '100%',
         }}
       >
@@ -59,8 +63,9 @@ export const FcfTable = ({ cashFlows, setUserGrowthRate }: FcfTableProps) => {
                 <input
                   name='userGrowthRate'
                   type='number'
+                  value={userGrowthRate}
                   onChange={(e) => {
-                    const value = Number(e.target.value) / 100;
+                    const value = e.target.value;
                     setUserGrowthRate(value);
                   }}
                   onKeyDown={blockInvalidChar}

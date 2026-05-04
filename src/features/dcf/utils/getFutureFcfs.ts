@@ -12,7 +12,7 @@ export const getFutureFcfs = (cashFlows: number[], userGrowthRate: number) => {
     const nextFCF = Number(
       (
         futureFCFs.future[futureFCFs.future.length - 1] *
-        (1 + userGrowthRate)
+        (1 + userGrowthRate / 100)
       ).toFixed(3),
     );
     futureFCFs.future.push(nextFCF);
