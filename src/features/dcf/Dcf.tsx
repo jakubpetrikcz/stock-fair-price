@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import { useFetchCashFlow } from '../../hooks/useFetchCashFlow';
-import { useFetchBalanceSheet } from '../../hooks/useFetchBalanceSheet';
-import { useFetchSharesOutstanding } from '../../hooks/useFetchSharesOutstanding';
 import { getFutureFcfs } from './utils/getFutureFcfs';
 import { FcfTable } from './components/FcfTable';
 import { FutureFcfTable } from './components/FutureFcfTable';
 import { PricePerShareTable } from './components/PricePerShareTable';
 import { DEFAULT_GROWTH_RATE, FINANCIALS_LS_KEY } from '../../constants';
 import type { FinancialType } from './types';
+import { useFetchCashFlow } from './hooks/useFetchCashFlow';
+import { useFetchBalanceSheet } from './hooks/useFetchBalanceSheet';
+import { useFetchSharesOutstanding } from './hooks/useFetchSharesOutstanding';
 
 type DcfProps = {
   ticker: string;

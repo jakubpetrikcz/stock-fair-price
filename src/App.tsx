@@ -1,10 +1,22 @@
 import { useState } from 'react';
 import './App.css';
 import { Dcf } from './features/dcf/Dcf';
-import { STOCK_TICKERS } from './constants';
+import { useFetchStockList } from './hooks/useFetchStockList';
+import { STOCK_LIST_LS_KEY } from './constants';
+
+export type StockItem = {
+  symbol: string;
+  companyName: string;
+};
 
 function App() {
-  const [ticker, setTicker] = useState(STOCK_TICKERS[0]);
+  const stockListLS = JSON.parse(
+    localStorage.getItem(STOCK_LIST_LS_KEY) || '[]',
+  );
+  const [stockList, setStockList] = useState<StockItem[]>(stockListLS);
+  const [ticker, setTicker] = useState('');
+
+  useFetchStockList(stockList.length > 0, setStockList);
 
   return (
     <div>
@@ -13,15 +25,16 @@ function App() {
         id='ticker-select'
         onChange={(e) => setTicker(e.target.value)}
       >
-        {STOCK_TICKERS.map((ticker) => {
+        <option value=''>Nothing selected</option>
+        {stockList.map((stock) => {
           return (
-            <option key={ticker} value={ticker}>
-              {ticker}
+            <option key={stock.symbol} value={stock.symbol}>
+              {stock.symbol} - {stock.companyName}
             </option>
           );
         })}
       </select>
-      <Dcf ticker={ticker} />
+      {ticker && <Dcf ticker={ticker} />}
     </div>
   );
 }

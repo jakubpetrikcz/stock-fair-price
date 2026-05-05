@@ -1,7 +1,7 @@
 import { useEffect, type Dispatch, type SetStateAction } from 'react';
-import { FINANCIALS_LS_KEY, FMP_API_BASE_URL } from '../constants';
-import { roundToMillions } from '../utils/roundToMillions';
-import type { FinancialType } from '../features/dcf/types';
+import type { FinancialType } from '../types';
+import { FINANCIALS_LS_KEY, FMP_API_BASE_URL } from '../../../constants';
+import { roundToMillions } from '../../../utils/roundToMillions';
 
 export const useFetchSharesOutstanding = (
   stop: boolean,

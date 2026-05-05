@@ -42,8 +42,8 @@ export const FutureFcfTable = ({
         </tr>
         <tr>
           <th>PV of FFCF</th>
-          {pvOfFFCF.map((pv) => (
-            <td key={pv}>{pv}</td>
+          {pvOfFFCF.map((pv, index) => (
+            <td key={`${pv}-${index}`}>{pv}</td>
           ))}
           <td>{terminalValuePVOfFFCF}</td>
         </tr>
