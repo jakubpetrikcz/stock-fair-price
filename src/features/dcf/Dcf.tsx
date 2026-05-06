@@ -24,12 +24,12 @@ export const Dcf = ({ ticker }: DcfProps) => {
   const [financials, setFinancials] = useState<FinancialType>(financialsLS);
   const tickerFinancials = financials?.[ticker];
 
-  const cashFlows = tickerFinancials?.cashFlowsData || [];
+  const cashFlowsData = tickerFinancials?.cashFlowsData || [];
   const cashEquivalents = tickerFinancials?.cashEquivalents;
   const totalDebt = tickerFinancials?.totalDebt;
   const sharesOutstanding = tickerFinancials?.sharesOutstanding;
 
-  useFetchCashFlow(cashFlows.length > 0, ticker, setFinancials);
+  useFetchCashFlow(cashFlowsData.length > 0, ticker, setFinancials);
   useFetchBalanceSheet(
     Boolean(cashEquivalents && totalDebt),
     ticker,
@@ -39,7 +39,13 @@ export const Dcf = ({ ticker }: DcfProps) => {
 
   const userGrowthRateNumber = Number(userGrowthRate);
 
+  const cashFlows = cashFlowsData.map((cashFlow) => cashFlow.cashFlow);
+
   const futureFcfs = getFutureFcfs(cashFlows, userGrowthRateNumber);
+
+  const years = cashFlowsData.map((cashFlow) =>
+    new Date(cashFlow.date).getFullYear(),
+  );
 
   return (
     <div>
@@ -47,10 +53,12 @@ export const Dcf = ({ ticker }: DcfProps) => {
         cashFlows={cashFlows}
         userGrowthRate={userGrowthRate}
         setUserGrowthRate={setUserGrowthRate}
+        years={years}
       />
       <FutureFcfTable
         futureFcf={futureFcfs.future}
         pvOfFFCF={futureFcfs.pvOfFFCF}
+        lastYear={years[years.length - 1]}
       />
       <PricePerShareTable
         pvOfFFCF={futureFcfs.pvOfFFCF}

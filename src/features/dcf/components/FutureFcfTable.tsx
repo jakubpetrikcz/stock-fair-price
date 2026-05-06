@@ -3,14 +3,20 @@ import { getTerminalValue } from '../utils/getTerminalValue';
 type FutureFcfTableProps = {
   futureFcf: number[];
   pvOfFFCF: number[];
+  lastYear: number;
 };
 
 export const FutureFcfTable = ({
   futureFcf,
   pvOfFFCF,
+  lastYear,
 }: FutureFcfTableProps) => {
   const { terminalValueFCF, terminalValuePVOfFFCF } =
     getTerminalValue(futureFcf);
+
+  const futureYears = Array.from({ length: 9 }).map(
+    (_, index) => lastYear + (index + 1),
+  );
 
   return (
     <table
@@ -22,15 +28,9 @@ export const FutureFcfTable = ({
       <tbody>
         <tr>
           <th>Year</th>
-          <td>2026</td>
-          <td>2027</td>
-          <td>2028</td>
-          <td>2029</td>
-          <td>2030</td>
-          <td>2031</td>
-          <td>2032</td>
-          <td>2033</td>
-          <td>2034</td>
+          {futureYears.map((futureYear, index) => (
+            <td key={`${futureYear}-${index}`}>{futureYear}</td>
+          ))}
           <td>Terminal Value</td>
         </tr>
         <tr>

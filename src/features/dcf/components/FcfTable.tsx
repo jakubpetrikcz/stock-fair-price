@@ -8,12 +8,14 @@ type FcfTableProps = {
   cashFlows: number[];
   userGrowthRate: string | number;
   setUserGrowthRate: Dispatch<SetStateAction<string | number>>;
+  years: number[];
 };
 
 export const FcfTable = ({
   cashFlows,
   userGrowthRate,
   setUserGrowthRate,
+  years,
 }: FcfTableProps) => {
   const { growths, averageGrowthRate } = getGrowthRate(cashFlows);
 
@@ -28,11 +30,9 @@ export const FcfTable = ({
         <tbody>
           <tr>
             <th>Year</th>
-            <td>2021</td>
-            <td>2022</td>
-            <td>2023</td>
-            <td>2024</td>
-            <td>2025</td>
+            {years.map((year) => (
+              <td key={year}>{year}</td>
+            ))}
           </tr>
           <tr>
             <th>Free Cash Flow</th>

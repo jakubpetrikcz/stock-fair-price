@@ -5,6 +5,7 @@ import { roundToMillions } from '../../../utils/roundToMillions';
 
 type CashFlowStatementData = {
   freeCashFlow: number;
+  date: string;
   [key: string]: unknown;
 };
 
@@ -25,9 +26,12 @@ export const useFetchCashFlow = (
         );
         const data = await response.json();
         const cashFlowsData = data
-          .map((item: CashFlowStatementData) =>
-            roundToMillions(item.freeCashFlow),
-          )
+          .map((item: CashFlowStatementData) => {
+            return {
+              date: item.date,
+              cashFlow: roundToMillions(item.freeCashFlow),
+            };
+          })
           .reverse();
 
         const financials = JSON.parse(

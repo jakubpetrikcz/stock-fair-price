@@ -1,6 +1,11 @@
+type CashFlowData = {
+  date: string;
+  cashFlow: number;
+};
+
 type TickerData = {
   cashEquivalents: number;
-  cashFlowsData: number[];
+  cashFlowsData: CashFlowData[];
   sharesOutstanding: number;
   totalDebt: number;
 };

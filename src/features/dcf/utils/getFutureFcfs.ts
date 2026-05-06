@@ -13,7 +13,7 @@ export const getFutureFcfs = (cashFlows: number[], userGrowthRate: number) => {
       (
         futureFCFs.future[futureFCFs.future.length - 1] *
         (1 + userGrowthRate / 100)
-      ).toFixed(3),
+      ).toFixed(1),
     );
     futureFCFs.future.push(nextFCF);
 
@@ -21,7 +21,7 @@ export const getFutureFcfs = (cashFlows: number[], userGrowthRate: number) => {
       (
         futureFCFs.future[futureFCFs.future.length - 1] /
         Math.pow(1 + USER_DISCOUNT_RATE, index + 1)
-      ).toFixed(3),
+      ).toFixed(1),
     );
     futureFCFs.pvOfFFCF.push(nextPvOfFFCF);
   });
