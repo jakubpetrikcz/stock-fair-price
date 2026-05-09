@@ -19,35 +19,38 @@ export const FutureFcfTable = ({
   );
 
   return (
-    <table
-      style={{
-        marginTop: 20,
-        width: '100%',
-      }}
-    >
-      <tbody>
-        <tr>
-          <th>Year</th>
-          {futureYears.map((futureYear, index) => (
-            <td key={`${futureYear}-${index}`}>{futureYear}</td>
-          ))}
-          <td>Terminal Value</td>
-        </tr>
-        <tr>
-          <th>Future Free Cash Flows</th>
-          {futureFcf.map((cashFlow, index) => (
-            <td key={`${cashFlow}-${index}`}>{cashFlow}</td>
-          ))}
-          <td>{terminalValueFCF}</td>
-        </tr>
-        <tr>
-          <th>PV of FFCF</th>
-          {pvOfFFCF.map((pv, index) => (
-            <td key={`${pv}-${index}`}>{pv}</td>
-          ))}
-          <td>{terminalValuePVOfFFCF}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div style={{ overflowX: 'auto', maxWidth: '100%' }}>
+      <table
+        style={{
+          marginTop: 20,
+          width: '100%',
+        }}
+      >
+        <tbody>
+          <tr>
+            <th>Year</th>
+            {futureYears.map((futureYear, index) => (
+              <td key={`${futureYear}-${index}`}>{futureYear}</td>
+            ))}
+            <td>Terminal Value</td>
+          </tr>
+          <tr>
+            <th>Future Free Cash Flows</th>
+            {futureFcf.map((cashFlow, index) => (
+              <td key={`${cashFlow}-${index}`}>{cashFlow}</td>
+            ))}
+            <td>{terminalValueFCF}</td>
+          </tr>
+          <tr>
+            <th>PV of FFCF</th>
+            {pvOfFFCF.map((pv, index) => (
+              <td key={`${pv}-${index}`}>{pv}</td>
+            ))}
+            <td>{terminalValuePVOfFFCF}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style={{ height: '10px' }}></div>
+    </div>
   );
 };
