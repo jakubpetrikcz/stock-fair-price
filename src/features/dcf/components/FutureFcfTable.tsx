@@ -19,13 +19,8 @@ export const FutureFcfTable = ({
   );
 
   return (
-    <div style={{ overflowX: 'auto', maxWidth: '100%' }}>
-      <table
-        style={{
-          marginTop: 20,
-          width: '100%',
-        }}
-      >
+    <div className='overflow-x-auto max-w-full'>
+      <table className='mt-5 w-full'>
         <tbody>
           <tr>
             <th>Year</th>
@@ -50,7 +45,7 @@ export const FutureFcfTable = ({
           </tr>
         </tbody>
       </table>
-      <div style={{ height: '10px' }}></div>
+      <div className='h-2.5'></div>
     </div>
   );
 };

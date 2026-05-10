@@ -17,15 +17,9 @@ export const PricePerShareTable = ({
   sharesOutstanding,
   userGrowthRate,
 }: PricePerShareTableProps) => {
-  const sumOfFFCF = Number(
-    pvOfFFCF
-      .reduce((sum, pv) => {
-        return sum + pv;
-      }, 0)
-      .toFixed(),
-  );
+  const sumOfFFCF = Number(pvOfFFCF.reduce((sum, pv) => sum + pv, 0).toFixed());
 
-  const equityValue = sumOfFFCF + cashEquivalents - totalDebt;
+  const equityValue = (sumOfFFCF + cashEquivalents - totalDebt).toFixed();
 
   const fairPrice = calculateDcfFairPrice(
     cashFlows,
@@ -36,11 +30,7 @@ export const PricePerShareTable = ({
   );
 
   return (
-    <table
-      style={{
-        marginTop: 20,
-      }}
-    >
+    <table className='mt-5'>
       <tbody>
         <tr>
           <th>Sum of FFCF</th>

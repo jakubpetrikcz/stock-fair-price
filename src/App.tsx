@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import './App.css';
 import { Dcf } from './features/dcf/Dcf';
 import { useFetchStockList } from './hooks/useFetchStockList';
 import { STOCK_LIST_LS_KEY } from './constants';
@@ -19,20 +18,19 @@ function App() {
   useFetchStockList(stockList.length > 0, setStockList);
 
   return (
-    <div>
+    <div className='px-4 py-2'>
       <select
         name='tickers'
         id='ticker-select'
         onChange={(e) => setTicker(e.target.value)}
+        className='border'
       >
         <option value=''>Nothing selected</option>
-        {stockList.map((stock) => {
-          return (
-            <option key={stock.symbol} value={stock.symbol}>
-              {stock.symbol} - {stock.companyName}
-            </option>
-          );
-        })}
+        {stockList.map((stock) => (
+          <option key={stock.symbol} value={stock.symbol}>
+            {stock.symbol} - {stock.companyName}
+          </option>
+        ))}
       </select>
       {ticker && <Dcf ticker={ticker} />}
     </div>

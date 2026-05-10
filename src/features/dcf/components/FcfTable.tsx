@@ -21,12 +21,7 @@ export const FcfTable = ({
 
   return (
     <>
-      <table
-        style={{
-          marginTop: 100,
-          width: '100%',
-        }}
-      >
+      <table className='mt-5 w-full'>
         <tbody>
           <tr>
             <th>Year</th>
@@ -49,17 +44,12 @@ export const FcfTable = ({
           </tr>
         </tbody>
       </table>
-      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <table
-          style={{
-            marginTop: 20,
-            borderCollapse: 'collapse',
-          }}
-        >
+      <div className='flex justify-end'>
+        <table className='mt-5'>
           <tbody>
             <tr>
               <th>User-Growth Rate</th>
-              <td style={{ padding: 0, height: 29 }}>
+              <td className='p-0! h-7.25'>
                 <input
                   name='userGrowthRate'
                   type='number'
@@ -69,12 +59,7 @@ export const FcfTable = ({
                     setUserGrowthRate(value);
                   }}
                   onKeyDown={blockInvalidChar}
-                  style={{
-                    height: '100%',
-                    border: 'none',
-                    padding: 0,
-                    backgroundColor: 'red',
-                  }}
+                  className='h-full border-0 p-0 bg-red-500'
                 />
               </td>
             </tr>

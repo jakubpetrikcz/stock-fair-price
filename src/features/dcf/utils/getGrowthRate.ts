@@ -14,11 +14,7 @@ export const getGrowthRate = (cashFlows: number[]) => {
     .filter(Boolean) as number[];
 
   const averageGrowthRate = (
-    Number(
-      growths.reduce((sum, growth) => {
-        return sum + growth;
-      }, 0),
-    ) / growths.length
+    Number(growths.reduce((sum, growth) => sum + growth, 0)) / growths.length
   ).toFixed(2);
 
   return { growths, averageGrowthRate };

@@ -21,11 +21,7 @@ export const calculateDcfFairPrice = (
   );
 
   const sumOfFFCF = Number(
-    futureFCFs.pvOfFFCF
-      .reduce((sum, pv) => {
-        return sum + pv;
-      }, 0)
-      .toFixed(),
+    futureFCFs.pvOfFFCF.reduce((sum, pv) => sum + pv, 0).toFixed(),
   );
 
   const equityValue = sumOfFFCF + cashEquivalents - totalDebt;

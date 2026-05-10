@@ -1,0 +1,18 @@
+@import 'tailwindcss';
+
+:root {
+  --default-font-family: 'Satoshi', 'sans-serif';
+}
+
+table {
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding-inline: 20px;
+  padding-block: 5px;
+  text-align: center;
+  border: 1px solid black;
+  white-space: nowrap;
+}
