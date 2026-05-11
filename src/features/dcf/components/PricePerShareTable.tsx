@@ -52,7 +52,7 @@ export const PricePerShareTable = ({
           <th>Shares Outstanding</th>
           <td>{sharesOutstanding}</td>
         </tr>
-        <tr>
+        <tr className='bg-green-400'>
           <th>DCF Price Per Share</th>
           <td>{fairPrice}</td>
         </tr>

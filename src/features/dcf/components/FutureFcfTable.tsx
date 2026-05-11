@@ -23,21 +23,23 @@ export const FutureFcfTable = ({
       <table className='mt-5 w-full'>
         <tbody>
           <tr>
-            <th>Year</th>
+            <th className='bg-amber-300'>Year</th>
             {futureYears.map((futureYear, index) => (
-              <td key={`${futureYear}-${index}`}>{futureYear}</td>
+              <th key={`${futureYear}-${index}`} className='bg-blue-200'>
+                {futureYear}
+              </th>
             ))}
-            <td>Terminal Value</td>
+            <th className='bg-blue-200'>Terminal Value</th>
           </tr>
           <tr>
-            <th>Future Free Cash Flows</th>
+            <th className='bg-amber-300'>Future Free Cash Flows</th>
             {futureFcf.map((cashFlow, index) => (
               <td key={`${cashFlow}-${index}`}>{cashFlow}</td>
             ))}
             <td>{terminalValueFCF}</td>
           </tr>
           <tr>
-            <th>PV of FFCF</th>
+            <th className='bg-amber-300'>PV of FFCF</th>
             {pvOfFFCF.map((pv, index) => (
               <td key={`${pv}-${index}`}>{pv}</td>
             ))}

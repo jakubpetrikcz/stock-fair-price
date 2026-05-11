@@ -47,8 +47,21 @@ export const Dcf = ({ ticker }: DcfProps) => {
     new Date(cashFlow.date).getFullYear(),
   );
 
+  const isLoading =
+    cashFlowsData.length === 0 &&
+    !cashEquivalents &&
+    !totalDebt &&
+    !sharesOutstanding;
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <div>
+    <div className='mt-5'>
+      <h1 className='text-4xl text-center font-bold'>
+        Discounted Cash Flow Analysis Model
+      </h1>
       <FcfTable
         cashFlows={cashFlows}
         userGrowthRate={userGrowthRate}

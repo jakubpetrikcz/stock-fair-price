@@ -1,8 +1,6 @@
-import type { Dispatch, SetStateAction, KeyboardEvent } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 import { getGrowthRate } from '../utils/getGrowthRate';
-
-const blockInvalidChar = (e: KeyboardEvent<HTMLInputElement>) =>
-  ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
+import { blockInvalidCharacters } from '../../../utils/blockInvalidCharacters';
 
 type FcfTableProps = {
   cashFlows: number[];
@@ -24,19 +22,21 @@ export const FcfTable = ({
       <table className='mt-5 w-full'>
         <tbody>
           <tr>
-            <th>Year</th>
+            <th className='bg-amber-300'>Year</th>
             {years.map((year) => (
-              <td key={year}>{year}</td>
+              <th key={year} className='bg-blue-200'>
+                {year}
+              </th>
             ))}
           </tr>
           <tr>
-            <th>Free Cash Flow</th>
+            <th className='bg-amber-300'>Free Cash Flow</th>
             {cashFlows.map((cashFlow) => (
               <td key={cashFlow}>{cashFlow}</td>
             ))}
           </tr>
           <tr>
-            <th>Growth</th>
+            <th className='bg-amber-300'>Growth</th>
             <td>-</td>
             {growths.map((growth) => (
               <td key={growth}>{growth}</td>
@@ -54,12 +54,9 @@ export const FcfTable = ({
                   name='userGrowthRate'
                   type='number'
                   value={userGrowthRate}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setUserGrowthRate(value);
-                  }}
-                  onKeyDown={blockInvalidChar}
-                  className='h-full border-0 p-0 bg-red-500'
+                  onChange={(e) => setUserGrowthRate(e.target.value)}
+                  onKeyDown={blockInvalidCharacters}
+                  className='h-full border border-yellow-200 p-0 bg-yellow-50 text-center'
                 />
               </td>
             </tr>
