@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
 :root {
-  --default-font-family: 'Satoshi', 'sans-serif';
+  --default-font-family: 'Roboto', 'sans-serif';
 }
 
 table {

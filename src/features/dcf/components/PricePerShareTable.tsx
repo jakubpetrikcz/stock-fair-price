@@ -54,7 +54,9 @@ export const PricePerShareTable = ({
         </tr>
         <tr className='bg-green-400'>
           <th>DCF Price Per Share</th>
-          <td>{fairPrice}</td>
+          <td>
+            <strong>{fairPrice}</strong>
+          </td>
         </tr>
       </tbody>
     </table>

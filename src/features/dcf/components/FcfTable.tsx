@@ -39,7 +39,7 @@ export const FcfTable = ({
             <th className='bg-amber-300'>Growth</th>
             <td>-</td>
             {growths.map((growth) => (
-              <td key={growth}>{growth}</td>
+              <td key={growth}>{growth}%</td>
             ))}
           </tr>
         </tbody>
@@ -52,17 +52,22 @@ export const FcfTable = ({
               <td className='p-0! h-7.25'>
                 <input
                   name='userGrowthRate'
-                  type='number'
-                  value={userGrowthRate}
-                  onChange={(e) => setUserGrowthRate(e.target.value)}
+                  type='text'
+                  value={`${userGrowthRate}%`}
+                  onChange={(e) => {
+                    const val = e.target.value.replace('%', '');
+                    if (!isNaN(Number(val))) {
+                      setUserGrowthRate(val);
+                    }
+                  }}
                   onKeyDown={blockInvalidCharacters}
-                  className='h-full border border-yellow-200 p-0 bg-yellow-50 text-center'
+                  className='h-full border border-yellow-200 p-0 bg-yellow-50 text-center font-bold'
                 />
               </td>
             </tr>
             <tr>
               <th>Average Growth Rate</th>
-              <td>{averageGrowthRate}</td>
+              <td>{averageGrowthRate}%</td>
             </tr>
           </tbody>
         </table>
