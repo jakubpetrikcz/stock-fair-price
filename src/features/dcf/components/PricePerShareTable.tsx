@@ -1,23 +1,37 @@
+import { useSelector } from 'react-redux';
 import { calculateDcfFairPrice } from '../utils/calculateDcfFairPrice';
+import {
+  cashEquivalentsSelector,
+  totalDebtSelector,
+} from '../stores/selectors';
+import { useGetBalanceSheetQuery } from '../api/dcfFinancialsApi';
 
 type PricePerShareTableProps = {
+  ticker: string;
   pvOfFFCF: number[];
-  cashEquivalents: number;
-  totalDebt: number;
   cashFlows: number[];
   sharesOutstanding: number;
   userGrowthRate: number;
 };
 
 export const PricePerShareTable = ({
+  ticker,
   pvOfFFCF,
-  cashEquivalents,
-  totalDebt,
   cashFlows,
   sharesOutstanding,
   userGrowthRate,
 }: PricePerShareTableProps) => {
+  const cashEquivalents = useSelector(cashEquivalentsSelector(ticker));
+  const totalDebt = useSelector(totalDebtSelector(ticker));
+
+  const { isLoading: isBalanceSheetLoading } = useGetBalanceSheetQuery(ticker, {
+    skip: Boolean(cashEquivalents && totalDebt),
+  });
   const sumOfFFCF = Number(pvOfFFCF.reduce((sum, pv) => sum + pv, 0).toFixed());
+
+  if (isBalanceSheetLoading || !cashEquivalents || !totalDebt) {
+    return <div>Loading...</div>;
+  }
 
   const equityValue = (sumOfFFCF + cashEquivalents - totalDebt).toFixed();
 

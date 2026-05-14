@@ -3,57 +3,47 @@ import { getFutureFcfs } from './utils/getFutureFcfs';
 import { FcfTable } from './components/FcfTable';
 import { FutureFcfTable } from './components/FutureFcfTable';
 import { PricePerShareTable } from './components/PricePerShareTable';
-import { DEFAULT_GROWTH_RATE, FINANCIALS_LS_KEY } from '../../constants';
-import type { FinancialType } from './types';
-import { useFetchCashFlow } from './hooks/useFetchCashFlow';
-import { useFetchBalanceSheet } from './hooks/useFetchBalanceSheet';
-import { useFetchSharesOutstanding } from './hooks/useFetchSharesOutstanding';
+import { DEFAULT_GROWTH_RATE } from '../../constants';
+import {
+  useGetCashFlowsQuery,
+  useGetSharesOutstandingQuery,
+} from './api/dcfFinancialsApi';
+import { useSelector } from 'react-redux';
+import {
+  cashFlowsSelector,
+  sharesOutstandingSelector,
+} from './stores/selectors';
 
 type DcfProps = {
   ticker: string;
 };
 
 export const Dcf = ({ ticker }: DcfProps) => {
+  const cashFlow = useSelector(cashFlowsSelector(ticker)) || [];
+  const sharesOutstanding = useSelector(sharesOutstandingSelector(ticker));
+
+  const { isLoading: isCashFlowsLoading } = useGetCashFlowsQuery(ticker, {
+    skip: cashFlow.length > 0,
+  });
+
+  const { isLoading: isSharesOutstandingLoading } =
+    useGetSharesOutstandingQuery(ticker, { skip: Boolean(sharesOutstanding) });
+
   const [userGrowthRate, setUserGrowthRate] = useState<number | string>(
     DEFAULT_GROWTH_RATE,
   );
-  const financialsLS = JSON.parse(
-    localStorage.getItem(FINANCIALS_LS_KEY) || '{}',
-  );
-
-  const [financials, setFinancials] = useState<FinancialType>(financialsLS);
-  const tickerFinancials = financials?.[ticker];
-
-  const cashFlowsData = tickerFinancials?.cashFlowsData || [];
-  const cashEquivalents = tickerFinancials?.cashEquivalents;
-  const totalDebt = tickerFinancials?.totalDebt;
-  const sharesOutstanding = tickerFinancials?.sharesOutstanding;
-
-  useFetchCashFlow(cashFlowsData.length > 0, ticker, setFinancials);
-  useFetchBalanceSheet(
-    Boolean(cashEquivalents && totalDebt),
-    ticker,
-    setFinancials,
-  );
-  useFetchSharesOutstanding(Boolean(sharesOutstanding), ticker, setFinancials);
 
   const userGrowthRateNumber = Number(userGrowthRate);
 
-  const cashFlows = cashFlowsData.map((cashFlow) => cashFlow.cashFlow);
+  const cashFlows = cashFlow.map((cashFlow) => cashFlow.cashFlow);
 
   const futureFcfs = getFutureFcfs(cashFlows, userGrowthRateNumber);
 
-  const years = cashFlowsData.map((cashFlow) =>
+  const years = cashFlow.map((cashFlow) =>
     new Date(cashFlow.date).getFullYear(),
   );
 
-  const isLoading =
-    cashFlowsData.length === 0 &&
-    !cashEquivalents &&
-    !totalDebt &&
-    !sharesOutstanding;
-
-  if (isLoading) {
+  if (isCashFlowsLoading || isSharesOutstandingLoading || !sharesOutstanding) {
     return <div>Loading...</div>;
   }
 
@@ -74,9 +64,8 @@ export const Dcf = ({ ticker }: DcfProps) => {
         lastYear={years[years.length - 1]}
       />
       <PricePerShareTable
+        ticker={ticker}
         pvOfFFCF={futureFcfs.pvOfFFCF}
-        cashEquivalents={cashEquivalents}
-        totalDebt={totalDebt}
         cashFlows={cashFlows}
         sharesOutstanding={sharesOutstanding}
         userGrowthRate={userGrowthRateNumber}

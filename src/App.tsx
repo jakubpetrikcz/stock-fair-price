@@ -2,11 +2,6 @@ import { useState } from 'react';
 import { Dcf } from './features/dcf/Dcf';
 import { STOCK_LIST } from './constants';
 
-export type StockItem = {
-  symbol: string;
-  companyName: string;
-};
-
 function App() {
   const [ticker, setTicker] = useState('');
 
