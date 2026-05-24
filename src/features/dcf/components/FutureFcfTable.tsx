@@ -33,15 +33,15 @@ export const FutureFcfTable = ({
           </tr>
           <tr>
             <th className='bg-amber-300'>Future Free Cash Flows</th>
-            {futureFcf.map((cashFlow, index) => (
-              <td key={`${cashFlow}-${index}`}>{cashFlow}</td>
+            {futureYears.map((futureYear, index) => (
+              <td key={`future-fcf-${futureYear}`}>{futureFcf[index]}</td>
             ))}
             <td>{terminalValueFCF}</td>
           </tr>
           <tr>
             <th className='bg-amber-300'>PV of FFCF</th>
-            {pvOfFFCF.map((pv, index) => (
-              <td key={`${pv}-${index}`}>{pv}</td>
+            {futureYears.map((futureYear, index) => (
+              <td key={`pv-ffcf-${futureYear}`}>{pvOfFFCF[index]}</td>
             ))}
             <td>{terminalValuePVOfFFCF}</td>
           </tr>

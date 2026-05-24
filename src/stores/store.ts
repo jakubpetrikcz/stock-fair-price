@@ -1,17 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { dcfFinancialsApi } from '../features/dcf/api/dcfFinancialsApi';
-import { dcfFinancialsSlice } from '../features/dcf/stores/dcfFinancialsSlice';
-import { localStorageMiddleware } from './localStorage.middleware';
 
 const apis = {
   [dcfFinancialsApi.reducerPath]: dcfFinancialsApi.reducer,
 };
 
-const slices = {
-  [dcfFinancialsSlice.name]: dcfFinancialsSlice.reducer,
-};
+const slices = {};
 
-const middlewares = [dcfFinancialsApi.middleware, localStorageMiddleware];
+const middlewares = [dcfFinancialsApi.middleware];
 
 export const store = configureStore({
   reducer: {

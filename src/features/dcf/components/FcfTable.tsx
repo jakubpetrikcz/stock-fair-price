@@ -31,15 +31,15 @@ export const FcfTable = ({
           </tr>
           <tr>
             <th className='bg-amber-300'>Free Cash Flow</th>
-            {cashFlows.map((cashFlow) => (
-              <td key={cashFlow}>{cashFlow}</td>
+            {cashFlows.map((cashFlow, index) => (
+              <td key={years[index]}>{cashFlow}</td>
             ))}
           </tr>
           <tr>
             <th className='bg-amber-300'>Growth</th>
             <td>-</td>
-            {growths.map((growth) => (
-              <td key={growth}>{growth}%</td>
+            {growths.map((growth, index) => (
+              <td key={years[index + 1]}>{growth}%</td>
             ))}
           </tr>
         </tbody>

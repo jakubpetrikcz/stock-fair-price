@@ -1,46 +1,36 @@
-import { useSelector } from 'react-redux';
 import { calculateDcfFairPrice } from '../utils/calculateDcfFairPrice';
-import {
-  cashEquivalentsSelector,
-  totalDebtSelector,
-} from '../stores/selectors';
 import { useGetBalanceSheetQuery } from '../api/dcfFinancialsApi';
 
 type PricePerShareTableProps = {
   ticker: string;
   pvOfFFCF: number[];
-  cashFlows: number[];
   sharesOutstanding: number;
-  userGrowthRate: number;
+  futureFcfs: Record<string, number[]>;
 };
 
 export const PricePerShareTable = ({
   ticker,
   pvOfFFCF,
-  cashFlows,
   sharesOutstanding,
-  userGrowthRate,
+  futureFcfs,
 }: PricePerShareTableProps) => {
-  const cashEquivalents = useSelector(cashEquivalentsSelector(ticker));
-  const totalDebt = useSelector(totalDebtSelector(ticker));
-
-  const { isLoading: isBalanceSheetLoading } = useGetBalanceSheetQuery(ticker, {
-    skip: Boolean(cashEquivalents && totalDebt),
-  });
+  const { data: balanceSheetData, isLoading: isBalanceSheetLoading } =
+    useGetBalanceSheetQuery(ticker);
   const sumOfFFCF = Number(pvOfFFCF.reduce((sum, pv) => sum + pv, 0).toFixed());
 
-  if (isBalanceSheetLoading || !cashEquivalents || !totalDebt) {
+  if (isBalanceSheetLoading || !balanceSheetData) {
     return <div>Loading...</div>;
   }
+
+  const { cashEquivalents, totalDebt } = balanceSheetData;
 
   const equityValue = (sumOfFFCF + cashEquivalents - totalDebt).toFixed();
 
   const fairPrice = calculateDcfFairPrice(
-    cashFlows,
     cashEquivalents,
     totalDebt,
     sharesOutstanding,
-    userGrowthRate,
+    futureFcfs,
   );
 
   return (

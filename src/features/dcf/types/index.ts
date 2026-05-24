@@ -23,3 +23,15 @@ export type CashFlowStatementData = {
   date: string;
   [key: string]: unknown;
 };
+
+export type BalanceSheetStatementData = {
+  cashAndShortTermInvestments: number;
+  shortTermDebt: number;
+  longTermDebt: number;
+  [key: string]: unknown;
+};
+
+export type SharesFloatStatementData = {
+  outstandingShares: number;
+  [key: string]: unknown;
+};

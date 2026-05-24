@@ -1,0 +1,2 @@
+export const USER_DISCOUNT_RATE = 0.085;
+export const PERPETUAL_GROWTH_RATE = 0.025;

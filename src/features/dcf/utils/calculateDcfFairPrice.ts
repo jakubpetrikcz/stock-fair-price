@@ -1,27 +1,17 @@
-import { getFutureFcfs } from './getFutureFcfs';
 import { getTerminalValue } from './getTerminalValue';
 
-export const USER_DISCOUNT_RATE = 0.085;
-
 export const calculateDcfFairPrice = (
-  cashFlows: number[],
   cashEquivalents: number,
   totalDebt: number,
   sharesOutstanding: number,
-  userGrowthRate: number,
+  futureFcfs: Record<string, number[]>,
 ) => {
-  const futureFCFs = getFutureFcfs(cashFlows, userGrowthRate);
+  const { terminalValuePVOfFFCF } = getTerminalValue(futureFcfs.future);
 
-  const { terminalValuePVOfFFCF } = getTerminalValue(futureFCFs.future);
-
-  futureFCFs.pvOfFFCF.splice(
-    futureFCFs.pvOfFFCF.length,
-    0,
-    terminalValuePVOfFFCF,
-  );
+  const allPvOfFfcf = [...futureFcfs.pvOfFFCF, terminalValuePVOfFFCF];
 
   const sumOfFFCF = Number(
-    futureFCFs.pvOfFFCF.reduce((sum, pv) => sum + pv, 0).toFixed(),
+    allPvOfFfcf.reduce((sum, pv) => sum + pv, 0).toFixed(),
   );
 
   const equityValue = sumOfFFCF + cashEquivalents - totalDebt;

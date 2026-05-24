@@ -1,6 +1,4 @@
-import { USER_DISCOUNT_RATE } from './calculateDcfFairPrice';
-
-const PERPETUAL_GROWTH_RATE = 0.025;
+import { PERPETUAL_GROWTH_RATE, USER_DISCOUNT_RATE } from '../constants';
 
 export const getTerminalValue = (futureFCFs: number[]) => {
   const terminalValueFCF = Number(

@@ -12,6 +12,7 @@ function App() {
         <select
           name='tickers'
           id='ticker-select'
+          value={ticker}
           onChange={(e) => setTicker(e.target.value)}
           className='border-b'
         >

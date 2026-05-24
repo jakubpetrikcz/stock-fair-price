@@ -8,30 +8,29 @@ import {
   useGetCashFlowsQuery,
   useGetSharesOutstandingQuery,
 } from './api/dcfFinancialsApi';
-import { useSelector } from 'react-redux';
-import {
-  cashFlowsSelector,
-  sharesOutstandingSelector,
-} from './stores/selectors';
 
 type DcfProps = {
   ticker: string;
 };
 
 export const Dcf = ({ ticker }: DcfProps) => {
-  const cashFlow = useSelector(cashFlowsSelector(ticker)) || [];
-  const sharesOutstanding = useSelector(sharesOutstandingSelector(ticker));
-
-  const { isLoading: isCashFlowsLoading } = useGetCashFlowsQuery(ticker, {
-    skip: cashFlow.length > 0,
-  });
-
-  const { isLoading: isSharesOutstandingLoading } =
-    useGetSharesOutstandingQuery(ticker, { skip: Boolean(sharesOutstanding) });
+  const { data: cashFlow, isLoading: isCashFlowsLoading } =
+    useGetCashFlowsQuery(ticker);
+  const { data: sharesOutstanding, isLoading: isSharesOutstandingLoading } =
+    useGetSharesOutstandingQuery(ticker);
 
   const [userGrowthRate, setUserGrowthRate] = useState<number | string>(
     DEFAULT_GROWTH_RATE,
   );
+
+  if (
+    isCashFlowsLoading ||
+    isSharesOutstandingLoading ||
+    !sharesOutstanding ||
+    !cashFlow
+  ) {
+    return <div>Loading...</div>;
+  }
 
   const userGrowthRateNumber = Number(userGrowthRate);
 
@@ -42,10 +41,6 @@ export const Dcf = ({ ticker }: DcfProps) => {
   const years = cashFlow.map((cashFlow) =>
     new Date(cashFlow.date).getFullYear(),
   );
-
-  if (isCashFlowsLoading || isSharesOutstandingLoading || !sharesOutstanding) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className='mt-5'>
@@ -66,9 +61,8 @@ export const Dcf = ({ ticker }: DcfProps) => {
       <PricePerShareTable
         ticker={ticker}
         pvOfFFCF={futureFcfs.pvOfFFCF}
-        cashFlows={cashFlows}
         sharesOutstanding={sharesOutstanding}
-        userGrowthRate={userGrowthRateNumber}
+        futureFcfs={futureFcfs}
       />
     </div>
   );

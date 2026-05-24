@@ -1,9 +1,14 @@
-import { USER_DISCOUNT_RATE } from './calculateDcfFairPrice';
+import { USER_DISCOUNT_RATE } from "../constants";
+
+type FutureFcfs = {
+  future: number[];
+  pvOfFFCF: number[];
+};
 
 export const getFutureFcfs = (cashFlows: number[], userGrowthRate: number) => {
   const lastValue = cashFlows[cashFlows.length - 1];
 
-  const futureFCFs: Record<string, number[]> = {
+  const futureFCFs: FutureFcfs = {
     future: [lastValue],
     pvOfFFCF: [],
   };
