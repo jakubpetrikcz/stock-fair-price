@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Dcf } from './features/dcf/Dcf';
-import { useGetStocksQuery } from './features/dcf/api/stocksApi';
+import { useGetStocksQuery } from './api/stocksApi';
 
 function App() {
   const [ticker, setTicker] = useState('');
@@ -14,7 +14,7 @@ function App() {
     return <div>Error...</div>;
   }
 
-  const stockTickers = stocks?.map((stock) => ({
+  const stockTickers = stocks.map((stock) => ({
     ticker: stock.ticker,
     name: stock.name,
   }));

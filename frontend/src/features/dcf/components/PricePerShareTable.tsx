@@ -1,28 +1,21 @@
 import { calculateDcfFairPrice } from '../utils/calculateDcfFairPrice';
-import { useGetBalanceSheetQuery } from '../api/dcfFinancialsApi';
 
 type PricePerShareTableProps = {
-  ticker: string;
+  cashEquivalents: number;
+  totalDebt: number;
   pvOfFFCF: number[];
   sharesOutstanding: number;
   futureFcfs: Record<string, number[]>;
 };
 
 export const PricePerShareTable = ({
-  ticker,
+  cashEquivalents,
+  totalDebt,
   pvOfFFCF,
   sharesOutstanding,
   futureFcfs,
 }: PricePerShareTableProps) => {
-  const { data: balanceSheetData, isLoading: isBalanceSheetLoading } =
-    useGetBalanceSheetQuery(ticker);
   const sumOfFFCF = Number(pvOfFFCF.reduce((sum, pv) => sum + pv, 0).toFixed());
-
-  if (isBalanceSheetLoading || !balanceSheetData) {
-    return <div>Loading...</div>;
-  }
-
-  const { cashEquivalents, totalDebt } = balanceSheetData;
 
   const equityValue = (sumOfFFCF + cashEquivalents - totalDebt).toFixed();
 

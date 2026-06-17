@@ -20,7 +20,7 @@ router.get('/:ticker', async (req, res) => {
       'SELECT * FROM sec_companies WHERE ticker = $1',
       [ticker],
     );
-    res.json(getStock.rows);
+    res.json(getStock.rows[0]);
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Server Error');

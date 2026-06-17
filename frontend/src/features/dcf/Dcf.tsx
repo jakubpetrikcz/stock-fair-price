@@ -4,37 +4,36 @@ import { FcfTable } from './components/FcfTable';
 import { FutureFcfTable } from './components/FutureFcfTable';
 import { PricePerShareTable } from './components/PricePerShareTable';
 import { DEFAULT_GROWTH_RATE } from '../../constants';
-import {
-  useGetCashFlowsQuery,
-  useGetSharesOutstandingQuery,
-} from './api/dcfFinancialsApi';
-import { useGetStockQuery } from './api/stocksApi';
+import { roundToMillions } from '../../utils/roundToMillions';
+import { useGetStockQuery } from '../../api/stocksApi';
 
 type DcfProps = {
   ticker: string;
 };
 
 export const Dcf = ({ ticker }: DcfProps) => {
-  const { data: cashFlow, isLoading: isCashFlowsLoading } =
-    useGetCashFlowsQuery(ticker);
-  const { data: sharesOutstanding, isLoading: isSharesOutstandingLoading } =
-    useGetSharesOutstandingQuery(ticker);
-  const { data: stock } = useGetStockQuery(ticker);
+  const { data: stock, isLoading, isError } = useGetStockQuery(ticker);
 
   const [userGrowthRate, setUserGrowthRate] = useState<number | string>(
     DEFAULT_GROWTH_RATE,
   );
 
-  if (
-    isCashFlowsLoading ||
-    isSharesOutstandingLoading ||
-    !sharesOutstanding ||
-    !cashFlow
-  ) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
+  if (!stock || isError) {
+    return <div>Error...</div>;
+  }
+
   const userGrowthRateNumber = Number(userGrowthRate);
+
+  const cashFlow = stock.free_cash_flow
+    .map((item) => ({
+      date: item.date,
+      cashFlow: roundToMillions(item.value),
+    }))
+    .reverse();
 
   const cashFlows = cashFlow.map((cashFlow) => cashFlow.cashFlow);
 
@@ -43,6 +42,14 @@ export const Dcf = ({ ticker }: DcfProps) => {
   const years = cashFlow.map((cashFlow) =>
     new Date(cashFlow.date).getFullYear(),
   );
+
+  const sharesOutstanding = roundToMillions(
+    Number(stock.shares_outstanding),
+    1,
+  );
+
+  const cashEquivalents = roundToMillions(Number(stock.cash_equivalents));
+  const totalDebt = roundToMillions(Number(stock.total_debt));
 
   return (
     <div className='mt-5'>
@@ -61,7 +68,8 @@ export const Dcf = ({ ticker }: DcfProps) => {
         lastYear={years[years.length - 1]}
       />
       <PricePerShareTable
-        ticker={ticker}
+        cashEquivalents={cashEquivalents}
+        totalDebt={totalDebt}
         pvOfFFCF={futureFcfs.pvOfFFCF}
         sharesOutstanding={sharesOutstanding}
         futureFcfs={futureFcfs}
