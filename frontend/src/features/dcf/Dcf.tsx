@@ -8,6 +8,7 @@ import {
   useGetCashFlowsQuery,
   useGetSharesOutstandingQuery,
 } from './api/dcfFinancialsApi';
+import { useGetStockQuery } from './api/stocksApi';
 
 type DcfProps = {
   ticker: string;
@@ -18,6 +19,7 @@ export const Dcf = ({ ticker }: DcfProps) => {
     useGetCashFlowsQuery(ticker);
   const { data: sharesOutstanding, isLoading: isSharesOutstandingLoading } =
     useGetSharesOutstandingQuery(ticker);
+  const { data: stock } = useGetStockQuery(ticker);
 
   const [userGrowthRate, setUserGrowthRate] = useState<number | string>(
     DEFAULT_GROWTH_RATE,

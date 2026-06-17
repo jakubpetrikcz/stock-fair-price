@@ -1,9 +1,23 @@
 import { useState } from 'react';
 import { Dcf } from './features/dcf/Dcf';
-import { STOCK_LIST } from './constants';
+import { useGetStocksQuery } from './features/dcf/api/stocksApi';
 
 function App() {
   const [ticker, setTicker] = useState('');
+  const { data: stocks, isLoading, isError } = useGetStocksQuery();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!stocks || isError) {
+    return <div>Error...</div>;
+  }
+
+  const stockTickers = stocks?.map((stock) => ({
+    ticker: stock.ticker,
+    name: stock.name,
+  }));
 
   return (
     <div className='px-4 py-2'>
@@ -17,9 +31,9 @@ function App() {
           className='border-b'
         >
           <option value=''>Nothing selected</option>
-          {STOCK_LIST.map((stock) => (
-            <option key={stock} value={stock}>
-              {stock}
+          {stockTickers.map((stock) => (
+            <option key={stock.ticker} value={stock.ticker}>
+              {stock.name} - {stock.ticker}
             </option>
           ))}
         </select>
