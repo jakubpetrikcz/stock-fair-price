@@ -10,6 +10,12 @@ export type Stock = {
   shares_outstanding: string;
 };
 
+export type StockPrice = {
+  ticker: string;
+  price: number;
+  currency?: string | null;
+};
+
 type FreeCashFlow = {
   date: string;
   value: number;

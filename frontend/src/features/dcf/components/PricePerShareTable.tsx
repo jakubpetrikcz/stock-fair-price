@@ -1,11 +1,9 @@
-import { calculateDcfFairPrice } from '../utils/calculateDcfFairPrice';
-
 type PricePerShareTableProps = {
   cashEquivalents: number;
   totalDebt: number;
   pvOfFFCF: number[];
   sharesOutstanding: number;
-  futureFcfs: Record<string, number[]>;
+  fairPrice: number;
 };
 
 export const PricePerShareTable = ({
@@ -13,18 +11,11 @@ export const PricePerShareTable = ({
   totalDebt,
   pvOfFFCF,
   sharesOutstanding,
-  futureFcfs,
+  fairPrice,
 }: PricePerShareTableProps) => {
   const sumOfFFCF = Number(pvOfFFCF.reduce((sum, pv) => sum + pv, 0).toFixed());
 
   const equityValue = (sumOfFFCF + cashEquivalents - totalDebt).toFixed();
-
-  const fairPrice = calculateDcfFairPrice(
-    cashEquivalents,
-    totalDebt,
-    sharesOutstanding,
-    futureFcfs,
-  );
 
   return (
     <table className='mt-5'>

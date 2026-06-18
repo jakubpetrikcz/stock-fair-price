@@ -6,6 +6,8 @@ import { PricePerShareTable } from './components/PricePerShareTable';
 import { DEFAULT_GROWTH_RATE } from '../../constants';
 import { roundToMillions } from '../../utils/roundToMillions';
 import { useGetStockQuery } from '../../api/stocksApi';
+import { CurrentPriceTable } from './components/CurrentPriceTable';
+import { calculateDcfFairPrice } from './utils/calculateDcfFairPrice';
 
 type DcfProps = {
   ticker: string;
@@ -51,6 +53,13 @@ export const Dcf = ({ ticker }: DcfProps) => {
   const cashEquivalents = roundToMillions(Number(stock.cash_equivalents));
   const totalDebt = roundToMillions(Number(stock.total_debt));
 
+  const fairPrice = calculateDcfFairPrice(
+    cashEquivalents,
+    totalDebt,
+    sharesOutstanding,
+    futureFcfs,
+  );
+
   return (
     <div className='mt-5'>
       <h1 className='text-4xl text-center font-bold'>
@@ -72,8 +81,9 @@ export const Dcf = ({ ticker }: DcfProps) => {
         totalDebt={totalDebt}
         pvOfFFCF={futureFcfs.pvOfFFCF}
         sharesOutstanding={sharesOutstanding}
-        futureFcfs={futureFcfs}
+        fairPrice={fairPrice}
       />
+      <CurrentPriceTable ticker={ticker} fairPrice={fairPrice} />
     </div>
   );
 };

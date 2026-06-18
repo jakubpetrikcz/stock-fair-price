@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { Stock } from '../types';
+import type { Stock, StockPrice } from '../types';
 
 export const stocksApi = createApi({
   reducerPath: 'stocksApi',
@@ -11,7 +11,11 @@ export const stocksApi = createApi({
     getStock: builder.query<Stock, string>({
       query: (ticker) => `/stocks/${ticker}`,
     }),
+    getStockPrice: builder.query<StockPrice, string>({
+      query: (ticker) => `/stocks/${ticker}/price`,
+    }),
   }),
 });
 
-export const { useGetStocksQuery, useGetStockQuery } = stocksApi;
+export const { useGetStocksQuery, useGetStockQuery, useGetStockPriceQuery } =
+  stocksApi;
