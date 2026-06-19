@@ -52,6 +52,7 @@ export const CurrentPriceTable = ({
         <tr className={difference < 0 ? 'bg-red-400' : 'bg-green-400'}>
           <th>Difference</th>
           <td>{difference}%</td>
+          <td className='font-bold'>{difference < 0 ? 'SELL' : 'BUY'}</td>
         </tr>
       </tbody>
     </table>
