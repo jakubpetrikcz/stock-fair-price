@@ -1,9 +1,13 @@
 import { useState } from 'react';
 import { Dcf } from './features/dcf/Dcf';
 import { useGetStocksQuery } from './api/stocksApi';
+import { Autocomplete } from './components/Autocomplete';
+import type { StockOptionType } from './types';
+import { StockOption } from './components/StockOption';
 
 function App() {
-  const [ticker, setTicker] = useState('');
+  const [selected, setSelected] = useState('');
+
   const { data: stocks, isLoading, isError } = useGetStocksQuery();
 
   if (isLoading) {
@@ -14,31 +18,51 @@ function App() {
     return <div>Error...</div>;
   }
 
-  const stockTickers = stocks.map((stock) => ({
+  const stockOptions: StockOptionType[] = stocks.map((stock) => ({
     ticker: stock.ticker,
     name: stock.name,
   }));
 
+  const selectedTicker = selected?.split('-')[0].trim();
+
   return (
     <div className='px-4 py-2'>
       <div className='flex gap-2 mt-10'>
-        <span className='font-bold'>Stock:</span>
-        <select
+        <span className='font-bold mt-1.5'>Stock:</span>
+        <Autocomplete
           name='tickers'
-          id='ticker-select'
-          value={ticker}
-          onChange={(e) => setTicker(e.target.value)}
-          className='border-b'
-        >
-          <option value=''>Nothing selected</option>
-          {stockTickers.map((stock) => (
-            <option key={stock.ticker} value={stock.ticker}>
-              {stock.name} - {stock.ticker}
-            </option>
-          ))}
-        </select>
+          renderOptions={(setValue, value, setFocused) => {
+            const normalizeValue = value.toLowerCase();
+            return normalizeValue === selected.toLowerCase()
+              ? stockOptions.map((stock) => (
+                  <StockOption
+                    key={stock.ticker}
+                    stock={stock}
+                    setSelected={setSelected}
+                    setValue={setValue}
+                    setFocused={setFocused}
+                  />
+                ))
+              : stockOptions
+                  .filter((stock) => {
+                    const stockSelect =
+                      `${stock.ticker} - ${stock.name}`.toLowerCase();
+                    return stockSelect.includes(normalizeValue);
+                  })
+                  .map((stock) => (
+                    <StockOption
+                      key={stock.ticker}
+                      stock={stock}
+                      setSelected={setSelected}
+                      setValue={setValue}
+                      setFocused={setFocused}
+                    />
+                  ));
+          }}
+          onClear={() => setSelected('')}
+        />
       </div>
-      {ticker && <Dcf ticker={ticker} />}
+      {selectedTicker && <Dcf ticker={selectedTicker} />}
     </div>
   );
 }

@@ -20,3 +20,5 @@ type FreeCashFlow = {
   date: string;
   value: number;
 };
+
+export type StockOptionType = Pick<Stock, 'ticker' | 'name'>;
