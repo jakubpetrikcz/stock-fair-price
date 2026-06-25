@@ -1,9 +1,10 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { Stock, StockPrice } from '../types';
+import { API_URL } from '../api';
 
 export const stocksApi = createApi({
   reducerPath: 'stocksApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000' }),
+  baseQuery: fetchBaseQuery({ baseUrl: API_URL }),
   endpoints: (builder) => ({
     getStocks: builder.query<Stock[], void>({
       query: () => '/stocks',
