@@ -62,9 +62,24 @@ export const Dcf = ({ ticker }: DcfProps) => {
 
   return (
     <div className='mt-5'>
-      <h1 className='text-4xl text-center font-bold'>
-        Discounted Cash Flow Analysis Model
+      <h1 className='text-4xl font-bold mb-2'>
+        Discounted Cash Flow Analysis Model (DCF)
       </h1>
+      <ul className='ml-5 list-disc'>
+        <li>
+          A business valuation method that determines fair value based on
+          expected future cash flows.
+        </li>
+        <li>
+          It is suitable for stable and profitable companies with predictable
+          cash flow and a long track record of results.
+        </li>
+        <li>
+          On the other hand, it is not ideal for startups and fast-growing
+          companies without stable profits - companies in the early stages of
+          development or those that have only recently gone public.
+        </li>
+      </ul>
       <FcfTable
         cashFlows={cashFlows}
         userGrowthRate={userGrowthRate}
