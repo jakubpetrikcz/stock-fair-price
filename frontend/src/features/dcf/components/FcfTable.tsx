@@ -61,7 +61,7 @@ export const FcfTable = ({
                     }
                   }}
                   onKeyDown={blockInvalidCharacters}
-                  className='h-full border border-yellow-200 p-0 bg-yellow-50 text-center font-bold'
+                  className='w-full h-full border border-yellow-200 p-0 bg-yellow-50 text-center font-bold outline-0'
                 />
               </td>
             </tr>

@@ -41,6 +41,7 @@ export const Autocomplete = ({
           className='w-full border-b px-0.5 py-1 focus:outline-0'
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
+          autoComplete='off'
         />
         <AutocompleteEndAdornment
           value={value}

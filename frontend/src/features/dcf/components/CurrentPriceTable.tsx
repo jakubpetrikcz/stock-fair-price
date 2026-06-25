@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { useGetStockPriceQuery } from '../../../api/stocksApi';
 
 const formatPrice = (price: number, currency?: string | null) => {
@@ -49,7 +50,12 @@ export const CurrentPriceTable = ({
           <th>Current Price</th>
           <td>{formatPrice(stockPrice.price, stockPrice.currency)}</td>
         </tr>
-        <tr className={difference < 0 ? 'bg-red-400' : 'bg-green-400'}>
+        <tr
+          className={classNames({
+            'bg-red-400': difference < 0,
+            'bg-green-400': difference > 0,
+          })}
+        >
           <th>Difference</th>
           <td>{difference}%</td>
           <td className='font-bold'>{difference < 0 ? 'SELL' : 'BUY'}</td>

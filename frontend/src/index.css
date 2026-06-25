@@ -15,6 +15,7 @@ td {
   text-align: center;
   border: 1px solid black;
   white-space: nowrap;
+  width: 220px;
 }
 
 input::-webkit-outer-spin-button,
