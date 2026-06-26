@@ -13,6 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/stocks', stockRoutes);
+app.use('/api/stocks', stockRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);

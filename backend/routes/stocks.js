@@ -8,11 +8,34 @@ const PYTHON_BIN = process.env.PYTHON_BIN || 'python3';
 const getStockPriceScript = path.join(
   __dirname,
   '..',
-  'services',
+  'api',
   'get_stock_price.py',
 );
 
-const fetchStockPrice = (ticker) =>
+const fetchStockPriceFromApi = async (ticker) => {
+  const response = await fetch(
+    `${process.env.PRICE_API_URL}?ticker=${encodeURIComponent(ticker)}`,
+  );
+
+  const body = await response.text();
+  let data;
+
+  try {
+    data = JSON.parse(body);
+  } catch {
+    throw new Error(
+      `Price API returned non-JSON response (${response.status}): ${body}`,
+    );
+  }
+
+  if (!response.ok) {
+    throw new Error(data.error || 'Current stock price is unavailable');
+  }
+
+  return data;
+};
+
+const fetchStockPriceFromScript = (ticker) =>
   new Promise((resolve, reject) => {
     execFile(
       PYTHON_BIN,
@@ -32,6 +55,14 @@ const fetchStockPrice = (ticker) =>
       },
     );
   });
+
+const fetchStockPrice = (ticker) => {
+  if (process.env.PRICE_API_URL) {
+    return fetchStockPriceFromApi(ticker);
+  }
+
+  return fetchStockPriceFromScript(ticker);
+};
 
 router.get('/', async (req, res) => {
   try {
