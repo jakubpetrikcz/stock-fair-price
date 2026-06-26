@@ -24,7 +24,7 @@ const fetchStockPriceFromApi = async (ticker) => {
     data = JSON.parse(body);
   } catch {
     throw new Error(
-      `Price API returned non-JSON response (${response.status}): ${body}`,
+      `Price API returned NON-JSON response (${response.status}): ${body}`,
     );
   }
 
