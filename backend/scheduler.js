@@ -11,7 +11,7 @@ const task = async () => {
     const data = await pool.query('SELECT * FROM sec_companies ORDER BY ID');
     const rows = data.rows.slice(0, 5);
 
-    const python = spawn('python3', ['get_financial_data.py']);
+    const python = spawn('python3', ['./api/get_financial_data.py']);
 
     python.stdin.write(JSON.stringify(rows));
     python.stdin.end();
