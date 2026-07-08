@@ -2,12 +2,13 @@ from http.server import BaseHTTPRequestHandler
 from get_financial_data import get_financial_data
 import psycopg2
 import json
+import os
 
 
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
         conn = psycopg2.connect(
-            "tvůj postgres connection string"
+          os.environ["DATABASE_URL"]
         )
 
         cursor = conn.cursor()
