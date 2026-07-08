@@ -5,9 +5,7 @@ import json
 
 
 class handler(BaseHTTPRequestHandler):
-
     def do_GET(self):
-
         conn = psycopg2.connect(
             "tvůj postgres connection string"
         )
@@ -20,6 +18,8 @@ class handler(BaseHTTPRequestHandler):
         )
 
         rows = cursor.fetchall()
+        print("ROWS:")
+        print(rows)
 
 
         data = get_financial_data(rows)
