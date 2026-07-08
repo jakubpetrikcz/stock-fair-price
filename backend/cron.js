@@ -1,5 +1,5 @@
 import { spawn } from "child_process";
-import pool from "../db.js";
+import pool from "./db.js";
 
 export default async function handler(req, res) {
   console.log("Running scheduled task:", new Date());
