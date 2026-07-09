@@ -57,10 +57,10 @@ def get_financial_data(rows):
 
             result.append({
                 "ticker": item,
-                "cash_equivalents": cash_equivalents,
-                "total_debt": total_debt,
+                "cash_equivalents": float(cash_equivalents) if cash_equivalents is not None else None,
+                "total_debt": float(total_debt) if total_debt is not None else None,
                 "free_cash_flow": free_cash_flow,
-                "shares_outstanding": shares_outstanding
+                "shares_outstanding": int(shares_outstanding) if shares_outstanding is not None else None
             })
 
 
