@@ -11,7 +11,9 @@ class handler(BaseHTTPRequestHandler):
           os.environ["DATABASE_URL"]
         )
 
-        cursor = conn.cursor()
+        cursor = conn.cursor(
+            cursor_factory=psycopg2.extras.RealDictCursor
+        )
 
 
         cursor.execute(
