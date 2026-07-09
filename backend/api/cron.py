@@ -17,12 +17,10 @@ class handler(BaseHTTPRequestHandler):
 
 
         cursor.execute(
-            "SELECT * FROM sec_companies ORDER BY id LIMIT 5"
+            "SELECT * FROM sec_companies ORDER BY id"
         )
 
         rows = cursor.fetchall()
-        print("ROWS:")
-        print(rows)
 
 
         data = get_financial_data(rows)
