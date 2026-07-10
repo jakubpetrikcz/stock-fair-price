@@ -2,7 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const stockRoutes = require('./routes/stocks.js');
 const dotenv = require('dotenv');
-require("./scheduler.js");
 
 dotenv.config();
 

@@ -1,13 +1,37 @@
 import yfinance as yf
 import pandas as pd
+import psycopg2
+import os
+import json
+from dotenv import load_dotenv
+
+load_dotenv()
+
+def get_financial_data():
+    conn_string = f"host={os.environ['DB_HOST']} dbname={os.environ['DB_DATABASE']} user={os.environ['DB_USER']} password={os.environ['DB_PASSWORD']}"
+    environment = os.environ["NODE_ENV"]
+    conn = psycopg2.connect(
+        conn_string if environment == "development" else os.environ["DATABASE_URL"]
+    )
+
+    cursor = conn.cursor(
+        cursor_factory=psycopg2.extras.RealDictCursor
+    )
 
 
-def get_financial_data(rows):
+    cursor.execute(
+        "SELECT * FROM sec_companies ORDER BY id LIMIT 10"
+    )
+
+    rows = cursor.fetchall()
     df = pd.DataFrame(rows)
 
     result = []
+    total = len(df)
 
-    for item in df["ticker"]:
+    for i, item in enumerate(df["ticker"], start=1):
+        print(f"[{i}/{total}] Zpracovávám {item}...")
+
         try:
             ticker = yf.Ticker(item)
 
@@ -57,7 +81,7 @@ def get_financial_data(rows):
 
             result.append({
                 "ticker": item,
-                "cash_equivalents": float(cash_equivalents) if cash_equivalents is not None else None,
+                "cash_equivalents": 1,
                 "total_debt": float(total_debt) if total_debt is not None else None,
                 "free_cash_flow": free_cash_flow,
                 "shares_outstanding": int(shares_outstanding) if shares_outstanding is not None else None
@@ -76,4 +100,30 @@ def get_financial_data(rows):
             })
 
 
-    return result
+    for row in result:
+        cursor.execute(
+            """
+            UPDATE sec_companies
+            SET
+                cash_equivalents=%s,
+                total_debt=%s,
+                free_cash_flow=%s,
+                shares_outstanding=%s
+            WHERE ticker=%s
+            """,
+            (
+                row["cash_equivalents"],
+                row["total_debt"],
+                json.dumps(row["free_cash_flow"]),
+                row["shares_outstanding"],
+                row["ticker"]
+            )
+        )
+
+
+    conn.commit()
+    print(f"\nHotovo. Zpracováno {total} firem.")
+
+
+if __name__ == "__main__":
+    get_financial_data()
