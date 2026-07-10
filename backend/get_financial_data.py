@@ -8,11 +8,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def get_financial_data():
-    conn_string = f"host={os.environ['DB_HOST']} dbname={os.environ['DB_DATABASE']} user={os.environ['DB_USER']} password={os.environ['DB_PASSWORD']}"
     environment = os.environ["NODE_ENV"]
-    conn = psycopg2.connect(
-        conn_string if environment == "development" else os.environ["DATABASE_URL"]
-    )
+    conn_string = f"host={os.environ['DB_HOST']} dbname={os.environ['DB_DATABASE']} user={os.environ['DB_USER']} password={os.environ['DB_PASSWORD']}" if environment == "development" else os.environ["DATABASE_URL"]
+    conn = psycopg2.connect(conn_string)
 
     cursor = conn.cursor(
         cursor_factory=psycopg2.extras.RealDictCursor
