@@ -1,1 +1,3 @@
-yfinance>=1.2.0
+yfinance
+pandas
+psycopg2-binary
