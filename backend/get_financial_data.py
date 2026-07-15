@@ -8,11 +8,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def get_financial_data():
-    conn_string = f"host={os.environ['DB_HOST']} dbname={os.environ['DB_DATABASE']} user={os.environ['DB_USER']} password={os.environ['DB_PASSWORD']}"
     environment = os.environ["NODE_ENV"]
-    conn = psycopg2.connect(
-        conn_string if environment == "development" else os.environ["DATABASE_URL"]
-    )
+    conn_string = f"host={os.environ['DB_HOST']} dbname={os.environ['DB_DATABASE']} user={os.environ['DB_USER']} password={os.environ['DB_PASSWORD']}" if environment == "development" else os.environ["DATABASE_URL"]
+    conn = psycopg2.connect(conn_string)
 
     cursor = conn.cursor(
         cursor_factory=psycopg2.extras.RealDictCursor
@@ -20,7 +18,7 @@ def get_financial_data():
 
 
     cursor.execute(
-        "SELECT * FROM sec_companies ORDER BY id LIMIT 10"
+        "SELECT * FROM sec_companies ORDER BY id"
     )
 
     rows = cursor.fetchall()
@@ -81,7 +79,7 @@ def get_financial_data():
 
             result.append({
                 "ticker": item,
-                "cash_equivalents": 1,
+                "cash_equivalents": 0,
                 "total_debt": float(total_debt) if total_debt is not None else None,
                 "free_cash_flow": free_cash_flow,
                 "shares_outstanding": int(shares_outstanding) if shares_outstanding is not None else None
