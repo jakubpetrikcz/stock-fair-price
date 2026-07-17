@@ -1,11 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { stocksApi } from '../api/stocksApi';
+import { stocksSlice } from '../components/StockAutocomplete/stores/stocksSlice';
 
 const apis = {
   [stocksApi.reducerPath]: stocksApi.reducer,
 };
 
-const slices = {};
+const slices = {
+  [stocksSlice.name]: stocksSlice.reducer,
+};
 
 const middlewares = [stocksApi.middleware];
 

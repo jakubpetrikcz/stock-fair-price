@@ -1,9 +1,9 @@
 import { type SetStateAction } from 'react';
-import type { StockOptionType } from '../types';
+import type { StockOptionType } from '../../types';
 
 type StockOptionProps = {
   stock: StockOptionType;
-  setSelected: (value: SetStateAction<string>) => void;
+  setSelected: (value: string) => void;
   setValue: (value: SetStateAction<string>) => void;
   setFocused: (value: SetStateAction<boolean>) => void;
 };
