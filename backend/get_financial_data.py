@@ -18,7 +18,7 @@ def get_financial_data():
 
 
     cursor.execute(
-        "SELECT * FROM sec_companies ORDER BY id"
+        "SELECT * FROM sec_companies ORDER BY id LIMIT 20"
     )
 
     rows = cursor.fetchall()
