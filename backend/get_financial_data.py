@@ -4,6 +4,7 @@ import psycopg2
 import os
 import json
 from dotenv import load_dotenv
+import time
 
 load_dotenv()
 
@@ -29,6 +30,7 @@ def get_financial_data():
 
     for i, item in enumerate(df["ticker"], start=1):
         print(f"[{i}/{total}] Zpracovávám {item}...")
+        time.sleep(0.2)
 
         try:
             ticker = yf.Ticker(item)
