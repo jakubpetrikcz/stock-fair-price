@@ -72,7 +72,7 @@ def get_financial_data():
         time.sleep(0.2)
 
         company_data = {
-            "cash_equivalents": 0,
+            "cash_equivalents": None,
             "total_debt": None,
             "free_cash_flow": [],
             "shares_outstanding": None
@@ -97,21 +97,21 @@ def get_financial_data():
             except Exception:
                 info = {}
 
-            # if "Cash Cash Equivalents And Short Term Investments" in bs.index:
+            if "Cash Cash Equivalents And Short Term Investments" in bs.index:
 
-            #     company_data["cash_equivalents"] = (
-            #         bs.loc[
-            #             "Cash Cash Equivalents And Short Term Investments"
-            #         ].iloc[0]
-            #     )
+                company_data["cash_equivalents"] = float(
+                    bs.loc[
+                        "Cash Cash Equivalents And Short Term Investments"
+                    ].iloc[0]
+                )
 
-            # elif "Cash And Cash Equivalents" in bs.index:
+            elif "Cash And Cash Equivalents" in bs.index:
 
-            #     company_data["cash_equivalents"] = (
-            #         bs.loc[
-            #             "Cash And Cash Equivalents"
-            #         ].iloc[0]
-            #     )
+                company_data["cash_equivalents"] = float(
+                    bs.loc[
+                        "Cash And Cash Equivalents"
+                    ].iloc[0]
+                )
 
             if "Total Debt" in bs.index:
 
