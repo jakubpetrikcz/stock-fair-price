@@ -13,4 +13,10 @@ export const menu: NavLinkType[] = [
     alt: 'dcf',
     path: '/dcf',
   },
+  {
+    name: 'Favorites',
+    iconSrc: '/icons/heart-regular-full.svg',
+    alt: 'favorites',
+    path: '/favorites',
+  },
 ];

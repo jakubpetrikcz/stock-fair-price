@@ -66,7 +66,9 @@ const fetchStockPrice = (ticker) => {
 
 router.get('/', async (req, res) => {
   try {
-    const getStocks = await pool.query('SELECT * FROM sec_companies ORDER BY ID');
+    const getStocks = await pool.query(
+      'SELECT * FROM sec_companies ORDER BY ID',
+    );
     res.json(getStocks.rows);
   } catch (error) {
     console.error(error.message);

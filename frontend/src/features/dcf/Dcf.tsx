@@ -8,6 +8,7 @@ import { roundToMillions } from '../../utils/roundToMillions';
 import { useGetStockQuery } from '../../api/stocksApi';
 import { CurrentPriceTable } from './components/CurrentPriceTable';
 import { calculateDcfFairPrice } from './utils/calculateDcfFairPrice';
+import { DcfTitle } from './DcfTitle';
 
 type DcfProps = {
   ticker: string;
@@ -62,9 +63,7 @@ export const Dcf = ({ ticker }: DcfProps) => {
 
   return (
     <div className='mt-5'>
-      <h1 className='text-4xl font-bold mb-2'>
-        Discounted Cash Flow Analysis Model (DCF)
-      </h1>
+      <DcfTitle stockId={stock.id} fairPrice={fairPrice} />
       <ul className='ml-5 list-disc'>
         <li>
           A business valuation method that determines fair value based on
