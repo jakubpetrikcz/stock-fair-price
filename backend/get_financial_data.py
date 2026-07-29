@@ -72,10 +72,10 @@ def get_financial_data():
         time.sleep(0.2)
 
         company_data = {
-            "cash_equivalents": None,
-            "total_debt": None,
+            "cash_equivalents": 0,
+            "total_debt": 0,
             "free_cash_flow": [],
-            "shares_outstanding": None
+            "shares_outstanding": 0
         }
 
         try:
