@@ -2,7 +2,8 @@ name: Update Financial Data
 
 on:
   schedule:
-    - cron: '0 10 * * *'
+    - cron: '0 0 * * *'
+      timezone: 'Europe/Prague'
   workflow_dispatch:
 
 jobs:
@@ -15,10 +16,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.12'
 
@@ -30,4 +31,5 @@ jobs:
       - name: Run financial data update
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          NODE_ENV: ${{ secrets.NODE_ENV }}
         run: python get_financial_data.py
