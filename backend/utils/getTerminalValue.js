@@ -1,6 +1,7 @@
-import { PERPETUAL_GROWTH_RATE, USER_DISCOUNT_RATE } from '../constants';
+const USER_DISCOUNT_RATE = 0.085;
+const PERPETUAL_GROWTH_RATE = 0.025;
 
-export const getTerminalValue = (futureFCFs: number[]) => {
+const getTerminalValue = (futureFCFs) => {
   const terminalValueFCF = Number(
     (
       futureFCFs[futureFCFs.length - 1] *
@@ -15,3 +16,5 @@ export const getTerminalValue = (futureFCFs: number[]) => {
 
   return { terminalValueFCF, terminalValuePVOfFFCF };
 };
+
+module.exports = getTerminalValue;

@@ -1,14 +1,11 @@
-import { USER_DISCOUNT_RATE } from "../constants";
+const getTerminalValue = require("./getTerminalValue.js");
 
-type FutureFcfs = {
-  future: number[];
-  pvOfFFCF: number[];
-};
+const USER_DISCOUNT_RATE = 0.085;
 
-export const getFutureFcfs = (cashFlows: number[], userGrowthRate: number) => {
+const getFutureFcfs = (cashFlows, userGrowthRate) => {
   const lastValue = cashFlows[cashFlows.length - 1];
 
-  const futureFCFs: FutureFcfs = {
+  const futureFCFs = {
     future: [lastValue],
     pvOfFFCF: [],
   };
@@ -33,5 +30,14 @@ export const getFutureFcfs = (cashFlows: number[], userGrowthRate: number) => {
 
   futureFCFs.future.splice(0, 1);
 
+  const { terminalValueFCF, terminalValuePVOfFFCF } = getTerminalValue(
+    futureFCFs.future,
+  );
+
+  futureFCFs.future.push(terminalValueFCF);
+  futureFCFs.pvOfFFCF.push(terminalValuePVOfFFCF);
+
   return futureFCFs;
 };
+
+module.exports = getFutureFcfs;

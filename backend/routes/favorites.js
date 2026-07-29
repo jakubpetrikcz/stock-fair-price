@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const pool = require('../db.js');
+const pool = require('../config/dbConfig.js');
 
 const router = Router();
 
@@ -9,9 +9,9 @@ router.get('/', async (req, res) => {
       SELECT
         favorites.id,
         favorites.company_id,
-        favorites.dcf_fair_value,
         sec_companies.ticker,
-        sec_companies.name
+        sec_companies.name,
+        sec_companies.dcf_fair_value
       FROM favorites
       JOIN sec_companies
         ON sec_companies.id = favorites.company_id

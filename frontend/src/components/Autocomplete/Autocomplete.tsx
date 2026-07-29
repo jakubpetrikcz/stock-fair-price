@@ -15,14 +15,16 @@ type AutocompleteProps = {
     setFocused: Dispatch<SetStateAction<boolean>>,
   ) => ReactNode;
   onClear: () => void;
+  selectedValue: string;
 };
 
 export const Autocomplete = ({
   name,
   renderOptions,
   onClear,
+  selectedValue,
 }: AutocompleteProps) => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(selectedValue || '');
   const [focused, setFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 

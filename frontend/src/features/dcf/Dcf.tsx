@@ -1,13 +1,9 @@
-import { useState } from 'react';
-import { getFutureFcfs } from './utils/getFutureFcfs';
 import { FcfTable } from './components/FcfTable';
 import { FutureFcfTable } from './components/FutureFcfTable';
 import { PricePerShareTable } from './components/PricePerShareTable';
-import { DEFAULT_GROWTH_RATE } from '../../constants';
 import { roundToMillions } from '../../utils/roundToMillions';
 import { useGetStockQuery } from '../../api/stocksApi';
 import { CurrentPriceTable } from './components/CurrentPriceTable';
-import { calculateDcfFairPrice } from './utils/calculateDcfFairPrice';
 import { DcfTitle } from './DcfTitle';
 
 type DcfProps = {
@@ -17,10 +13,6 @@ type DcfProps = {
 export const Dcf = ({ ticker }: DcfProps) => {
   const { data: stock, isLoading, isError } = useGetStockQuery(ticker);
 
-  const [userGrowthRate, setUserGrowthRate] = useState<number | string>(
-    DEFAULT_GROWTH_RATE,
-  );
-
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -28,8 +20,6 @@ export const Dcf = ({ ticker }: DcfProps) => {
   if (!stock || isError) {
     return <div>Error...</div>;
   }
-
-  const userGrowthRateNumber = Number(userGrowthRate);
 
   const cashFlow = stock.free_cash_flow
     .map((item) => ({
@@ -39,8 +29,6 @@ export const Dcf = ({ ticker }: DcfProps) => {
     .reverse();
 
   const cashFlows = cashFlow.map((cashFlow) => cashFlow.cashFlow);
-
-  const futureFcfs = getFutureFcfs(cashFlows, userGrowthRateNumber);
 
   const years = cashFlow.map((cashFlow) =>
     new Date(cashFlow.date).getFullYear(),
@@ -54,12 +42,8 @@ export const Dcf = ({ ticker }: DcfProps) => {
   const cashEquivalents = roundToMillions(Number(stock.cash_equivalents));
   const totalDebt = roundToMillions(Number(stock.total_debt));
 
-  const fairPrice = calculateDcfFairPrice(
-    cashEquivalents,
-    totalDebt,
-    sharesOutstanding,
-    futureFcfs,
-  );
+  const fairPrice = stock.dcf_fair_value;
+  const futureFcfs = stock.dcf_future_fcfs || { future: [], pvOfFFCF: [] };
 
   return (
     <div className='mt-5'>
@@ -80,10 +64,10 @@ export const Dcf = ({ ticker }: DcfProps) => {
         </li>
       </ul>
       <FcfTable
+        ticker={ticker}
         cashFlows={cashFlows}
-        userGrowthRate={userGrowthRate}
-        setUserGrowthRate={setUserGrowthRate}
         years={years}
+        dcf_growth_rate={stock.dcf_growth_rate}
       />
       <FutureFcfTable
         futureFcf={futureFcfs.future}

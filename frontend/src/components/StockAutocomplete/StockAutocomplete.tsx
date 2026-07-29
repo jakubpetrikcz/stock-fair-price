@@ -62,6 +62,7 @@ export const StockAutocomplete = () => {
                 ));
         }}
         onClear={() => dispatch(selectStock(''))}
+        selectedValue={selectedStock}
       />
     </div>
   );

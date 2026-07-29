@@ -2,7 +2,11 @@ import { useGetFavoritesQuery } from './api/favoritesApi';
 import { Favorites } from './components/Favorites';
 
 export const FavoritesPage = () => {
-  const { data: favoriteStocks, isLoading, isError } = useGetFavoritesQuery();
+  const {
+    data: favoriteStocks,
+    isLoading,
+    isError,
+  } = useGetFavoritesQuery(undefined, { refetchOnMountOrArgChange: true });
 
   if (isLoading) {
     return <div>Loading...</div>;

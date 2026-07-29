@@ -18,7 +18,7 @@ def get_financial_data():
 
 
     cursor.execute(
-        "SELECT * FROM sec_companies ORDER BY id LIMIT 20"
+        "SELECT * FROM sec_companies ORDER BY id"
     )
 
     rows = cursor.fetchall()
@@ -79,10 +79,10 @@ def get_financial_data():
 
             result.append({
                 "ticker": item,
-                "cash_equivalents": 0,
-                "total_debt": float(total_debt) if total_debt is not None else None,
+                "cash_equivalents": float(cash_equivalents) if cash_equivalents is not None else 0,
+                "total_debt": float(total_debt) if total_debt is not None else 0,
                 "free_cash_flow": free_cash_flow,
-                "shares_outstanding": int(shares_outstanding) if shares_outstanding is not None else None
+                "shares_outstanding": int(shares_outstanding) if shares_outstanding is not None else 0
             })
 
 
@@ -91,10 +91,10 @@ def get_financial_data():
 
             result.append({
                 "ticker": item,
-                "cash_equivalents": None,
-                "total_debt": None,
+                "cash_equivalents": 0,
+                "total_debt": 0,
                 "free_cash_flow": [],
-                "shares_outstanding": None
+                "shares_outstanding": 0
             })
 
 

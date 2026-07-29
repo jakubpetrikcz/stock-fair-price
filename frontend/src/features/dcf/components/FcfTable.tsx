@@ -1,20 +1,28 @@
-import type { Dispatch, SetStateAction } from 'react';
+import { useState } from 'react';
 import { getGrowthRate } from '../utils/getGrowthRate';
 import { blockInvalidCharacters } from '../../../utils/blockInvalidCharacters';
+import { useUpdateStockDcfPriceMutation } from '../../../api/stocksApi';
+import { DEFAULT_GROWTH_RATE } from '../../../constants';
 
 type FcfTableProps = {
+  ticker: string;
   cashFlows: number[];
-  userGrowthRate: string | number;
-  setUserGrowthRate: Dispatch<SetStateAction<string | number>>;
   years: number[];
+  dcf_growth_rate: number;
 };
 
 export const FcfTable = ({
+  ticker,
   cashFlows,
-  userGrowthRate,
-  setUserGrowthRate,
   years,
+  dcf_growth_rate,
 }: FcfTableProps) => {
+  const [updateStockDcfPrice] = useUpdateStockDcfPriceMutation();
+
+  const [userGrowthRate, setUserGrowthRate] = useState<number | string>(
+    dcf_growth_rate || DEFAULT_GROWTH_RATE,
+  );
+
   const { growths, averageGrowthRate } = getGrowthRate(cashFlows);
 
   return (
@@ -58,6 +66,10 @@ export const FcfTable = ({
                     const val = e.target.value.replace('%', '');
                     if (!isNaN(Number(val))) {
                       setUserGrowthRate(val);
+                      updateStockDcfPrice({
+                        ticker,
+                        userGrowthRate: Number(val),
+                      });
                     }
                   }}
                   onKeyDown={blockInvalidCharacters}

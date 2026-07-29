@@ -1,7 +1,10 @@
 const { Router } = require('express');
 const { execFile } = require('node:child_process');
 const path = require('node:path');
-const pool = require('../db.js');
+const pool = require('../config/dbConfig.js');
+const roundToMillions = require('../utils/roundToMillions.js');
+const getFutureFcfs = require('../utils/getFutureFcfs.js');
+const calculateDcfFairPrice = require('../utils/calculateDcfFairPrice.js');
 
 const router = Router();
 const PYTHON_BIN = process.env.PYTHON_BIN || 'python3';
@@ -104,6 +107,54 @@ router.get('/:ticker/price', async (req, res) => {
   } catch (error) {
     console.error(error.message);
     res.status(503).json({ error: 'Current stock price is unavailable' });
+  }
+});
+
+router.put('/:ticker/dcf', async (req, res) => {
+  try {
+    const { ticker } = req.params;
+    const { userGrowthRate } = req.body;
+
+    const getStock = await pool.query(
+      'SELECT * FROM sec_companies WHERE ticker = $1',
+      [ticker],
+    );
+    const stock = getStock.rows[0];
+
+    const freeCashFlows = stock['free_cash_flow'];
+    const cashEquivalents = roundToMillions(Number(stock['cash_equivalents']));
+    const totalDebt = roundToMillions(Number(stock['total_debt']));
+    const sharesOutstanding = roundToMillions(
+      Number(stock['shares_outstanding']),
+      1,
+    );
+
+    const cashFlow = freeCashFlows
+      .map((item) => ({
+        cashFlow: roundToMillions(item.value),
+      }))
+      .reverse();
+
+    const cashFlows = cashFlow.map((cashFlow) => cashFlow.cashFlow);
+
+    const futureFcfs = getFutureFcfs(cashFlows, userGrowthRate);
+
+    const fairPrice = calculateDcfFairPrice(
+      cashEquivalents,
+      totalDebt,
+      sharesOutstanding,
+      futureFcfs,
+    );
+
+    await pool.query(
+      'UPDATE sec_companies SET dcf_growth_rate = $2, dcf_fair_value = $3, dcf_future_fcfs = $4 WHERE ticker = $1',
+      [ticker, userGrowthRate, fairPrice, futureFcfs],
+    );
+
+    res.json({ futureFcfs, fairPrice });
+  } catch (error) {
+    console.error(error.message);
+    res.status(503).json({ error: 'DCF price is unavailable' });
   }
 });
 
