@@ -2,7 +2,7 @@ name: Update Financial Data
 
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 0 * * 1'
       timezone: 'Europe/Prague'
   workflow_dispatch:
 
