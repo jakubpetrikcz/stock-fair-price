@@ -26,7 +26,17 @@ type FreeCashFlow = {
 
 export type StockOptionType = Pick<Stock, 'ticker' | 'name'>;
 
-export type FutureFcfs = {
+type FutureFcfs = {
   future: number[];
   pvOfFFCF: number[];
+};
+
+export type UpdateStockDcfPriceRequest = {
+  ticker: string;
+  userGrowthRate: number;
+};
+
+export type UpdateStockDcfPriceResponse = {
+  futureFcfs: FutureFcfs;
+  fairPrice: number;
 };

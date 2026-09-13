@@ -1,11 +1,11 @@
 import { useGetStocksQuery } from '../../api/stocksApi';
-import type { StockOptionType } from '../../types';
 import { Autocomplete } from '../Autocomplete/Autocomplete';
 import { StockOption } from '../Autocomplete/StockOption';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectStock } from './stores/stocksSlice';
 import type { AppDispatch } from '../../stores/store';
 import { selectedStockSelector } from './stores/selectors';
+import type { StockOptionType } from '../../types/stock';
 
 export const StockAutocomplete = () => {
   const dispatch = useDispatch<AppDispatch>();
