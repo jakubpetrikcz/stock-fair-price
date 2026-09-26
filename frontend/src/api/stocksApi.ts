@@ -1,7 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { FutureFcfs, Stock, StockPrice } from '../types';
 import { API_URL } from '../api';
 import { STOCK } from '../constants';
+import type {
+  Stock,
+  StockPrice,
+  UpdateStockDcfPriceRequest,
+  UpdateStockDcfPriceResponse,
+} from '../types/stock';
 
 export const stocksApi = createApi({
   reducerPath: 'stocksApi',
@@ -19,8 +24,8 @@ export const stocksApi = createApi({
       query: (ticker) => `/stocks/${ticker}/price`,
     }),
     updateStockDcfPrice: builder.mutation<
-      { futureFcfs: FutureFcfs; fairPrice: number },
-      { ticker: string; userGrowthRate: number }
+      UpdateStockDcfPriceResponse,
+      UpdateStockDcfPriceRequest
     >({
       query: ({ ticker, userGrowthRate }) => ({
         url: `/stocks/${ticker}/dcf`,

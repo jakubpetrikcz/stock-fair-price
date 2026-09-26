@@ -1,5 +1,5 @@
 import { type SetStateAction } from 'react';
-import type { StockOptionType } from '../../types';
+import type { StockOptionType } from '../../types/stock';
 
 type StockOptionProps = {
   stock: StockOptionType;

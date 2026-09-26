@@ -1,22 +1,29 @@
 const { Router } = require('express');
 const pool = require('../config/dbConfig.js');
+const protect = require('../middleware/auth.js');
 
 const router = Router();
 
-router.get('/', async (req, res) => {
+router.get('/', protect, async (req, res) => {
   try {
-    const getFavoriteStocks = await pool.query(`
+    const userId = req.user.id;
+    const getFavoriteStocks = await pool.query(
+      `
       SELECT
         favorites.id,
         favorites.company_id,
+        favorites.user_id,
         sec_companies.ticker,
         sec_companies.name,
         sec_companies.dcf_fair_value
       FROM favorites
       JOIN sec_companies
         ON sec_companies.id = favorites.company_id
-      ORDER BY id
-    `);
+      WHERE favorites.user_id = $1
+      ORDER BY favorites.id
+    `,
+      [userId],
+    );
     res.json(getFavoriteStocks.rows);
   } catch (error) {
     console.error(error.message);
@@ -40,10 +47,10 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const { companyId, fairPrice } = req.body;
+    const { companyId, userId } = req.body;
     const newFavoriteStock = await pool.query(
-      'INSERT INTO favorites (company_id, dcf_fair_value) VALUES($1, $2)',
-      [companyId, fairPrice],
+      'INSERT INTO favorites (company_id, user_id) VALUES($1, $2)',
+      [companyId, userId],
     );
     res.json(newFavoriteStock);
   } catch (error) {

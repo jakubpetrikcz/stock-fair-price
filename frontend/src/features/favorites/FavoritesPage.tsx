@@ -5,10 +5,11 @@ export const FavoritesPage = () => {
   const {
     data: favoriteStocks,
     isLoading,
+    isFetching,
     isError,
   } = useGetFavoritesQuery(undefined, { refetchOnMountOrArgChange: true });
 
-  if (isLoading) {
+  if (isLoading || isFetching) {
     return <div>Loading...</div>;
   }
 
@@ -19,7 +20,9 @@ export const FavoritesPage = () => {
   return (
     <div className='p-9'>
       <h1 className='text-3xl mb-8'>Favorites</h1>
-      <Favorites favoriteStocks={favoriteStocks} />
+      {favoriteStocks.length > 0 && (
+        <Favorites favoriteStocks={favoriteStocks} />
+      )}
     </div>
   );
 };
