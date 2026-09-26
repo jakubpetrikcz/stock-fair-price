@@ -1,5 +1,3 @@
-import { getTerminalValue } from '../utils/getTerminalValue';
-
 type FutureFcfTableProps = {
   futureFcf: number[];
   pvOfFFCF: number[];
@@ -11,8 +9,8 @@ export const FutureFcfTable = ({
   pvOfFFCF,
   lastYear,
 }: FutureFcfTableProps) => {
-  const { terminalValueFCF, terminalValuePVOfFFCF } =
-    getTerminalValue(futureFcf);
+  const terminalValueFCF = futureFcf[futureFcf.length - 1];
+  const terminalValuePVOfFFCF = pvOfFFCF[pvOfFFCF.length - 1];
 
   const futureYears = Array.from({ length: 9 }).map(
     (_, index) => lastYear + (index + 1),

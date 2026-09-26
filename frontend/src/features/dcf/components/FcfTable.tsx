@@ -1,20 +1,47 @@
-import type { Dispatch, SetStateAction } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 import { getGrowthRate } from '../utils/getGrowthRate';
 import { blockInvalidCharacters } from '../../../utils/blockInvalidCharacters';
+import { useUpdateStockDcfPriceMutation } from '../../../api/stocksApi';
+import { DEFAULT_GROWTH_RATE } from '../../../constants';
+import { useDebounce } from '../../../hooks/useDebounce';
 
 type FcfTableProps = {
+  ticker: string;
   cashFlows: number[];
-  userGrowthRate: string | number;
-  setUserGrowthRate: Dispatch<SetStateAction<string | number>>;
   years: number[];
+  dcf_growth_rate: number;
 };
 
 export const FcfTable = ({
+  ticker,
   cashFlows,
-  userGrowthRate,
-  setUserGrowthRate,
   years,
+  dcf_growth_rate,
 }: FcfTableProps) => {
+  const [updateStockDcfPrice] = useUpdateStockDcfPriceMutation();
+
+  const [userGrowthRate, setUserGrowthRate] = useState<string | number>(
+    dcf_growth_rate || DEFAULT_GROWTH_RATE,
+  );
+  const debouncedGrowthRate = useDebounce(userGrowthRate);
+
+  const onUpdateStockDcfPrice = useEffectEvent(
+    (debouncedSearch: string | number) => {
+      updateStockDcfPrice({
+        ticker,
+        userGrowthRate: Number(debouncedSearch),
+      });
+    },
+  );
+
+  useEffect(() => {
+    onUpdateStockDcfPrice(debouncedGrowthRate);
+  }, [debouncedGrowthRate]);
+
+  useEffect(() => {
+    setUserGrowthRate(dcf_growth_rate);
+  }, [dcf_growth_rate]);
+
   const { growths, averageGrowthRate } = getGrowthRate(cashFlows);
 
   return (
