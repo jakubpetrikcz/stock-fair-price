@@ -47,7 +47,7 @@ export const Dcf = ({ ticker }: DcfProps) => {
 
   return (
     <div className='mt-5'>
-      <DcfTitle stockId={stock.id} fairPrice={fairPrice} />
+      <DcfTitle stockId={stock.id} />
       <ul className='ml-5 list-disc'>
         <li>
           A business valuation method that determines fair value based on
