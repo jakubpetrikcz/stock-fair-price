@@ -6,7 +6,7 @@ import { FAVORITE } from '../constants';
 export const favoritesApi = createApi({
   reducerPath: 'favoritesApi',
   tagTypes: [FAVORITE],
-  baseQuery: fetchBaseQuery({ baseUrl: API_URL }),
+  baseQuery: fetchBaseQuery({ baseUrl: API_URL, credentials: 'include' }),
   endpoints: (builder) => ({
     getFavorites: builder.query<FavoriteStock[], void>({
       query: () => '/favorites',
@@ -18,12 +18,12 @@ export const favoritesApi = createApi({
     }),
     addFavorite: builder.mutation<
       unknown,
-      { companyId: string; fairPrice: number }
+      { companyId: string; userId: string }
     >({
-      query: ({ companyId, fairPrice }) => ({
+      query: ({ companyId, userId }) => ({
         url: '/favorites',
         method: 'POST',
-        body: { companyId, fairPrice },
+        body: { companyId, userId },
       }),
       invalidatesTags: [FAVORITE],
     }),

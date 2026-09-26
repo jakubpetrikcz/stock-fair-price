@@ -1,5 +1,6 @@
 import { HeartRegularFullIcon } from '../../components/ui/icons/components/HeartRegularFullIcon';
 import { HeartSolidFullIcon } from '../../components/ui/icons/components/HeartSolidFullIcon';
+import { useGetProfileQuery } from '../../stores/service/authApi';
 import {
   useAddFavoriteMutation,
   useDeleteFavoriteMutation,
@@ -8,13 +9,17 @@ import {
 
 type DcfTitleProps = {
   stockId: string;
-  fairPrice: number;
 };
 
-export const DcfTitle = ({ stockId, fairPrice }: DcfTitleProps) => {
+export const DcfTitle = ({ stockId }: DcfTitleProps) => {
+  const { data: user } = useGetProfileQuery();
   const { data: favoriteStock } = useGetFavoriteQuery(stockId);
   const [addFavorite] = useAddFavoriteMutation();
   const [deleteFavorite] = useDeleteFavoriteMutation();
+
+  if (!user) {
+    return <div>Error...</div>;
+  }
 
   return (
     <div className='flex items-center gap-2'>
@@ -26,7 +31,7 @@ export const DcfTitle = ({ stockId, fairPrice }: DcfTitleProps) => {
         onClick={() =>
           favoriteStock
             ? deleteFavorite({ favoriteId: favoriteStock.id })
-            : addFavorite({ companyId: stockId, fairPrice })
+            : addFavorite({ companyId: stockId, userId: user.id })
         }
       >
         {favoriteStock ? (
