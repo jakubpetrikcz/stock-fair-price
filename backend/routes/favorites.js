@@ -7,7 +7,6 @@ const router = Router();
 router.get('/', protect, async (req, res) => {
   try {
     const userId = req.user.id;
-    console.log("userId", userId);
     const getFavoriteStocks = await pool.query(
       `
       SELECT
