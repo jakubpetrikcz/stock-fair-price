@@ -12,6 +12,8 @@ const poolConfig = {
   ssl: isProduction ? { rejectUnauthorized: false } : false,
 };
 
+console.log('poolConfig', poolConfig);
+
 const pool = new Pool(poolConfig);
 
 module.exports = pool;
