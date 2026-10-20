@@ -63,16 +63,6 @@ router.post('/login', async (req, res) => {
       .json({ message: 'Please provide all required fields' });
   }
 
-  const tables = await pool.query(
-    "SELECT * FROM information_schema.tables WHERE table_schema = 'public'",
-  );
-
-  console.log('tables', tables);
-
-  const users = await pool.query('SELECT * FROM users');
-
-  console.log('users', users);
-
   const user = await pool.query('SELECT * FROM users WHERE email = $1', [
     email,
   ]);
