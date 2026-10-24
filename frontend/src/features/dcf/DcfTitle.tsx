@@ -13,7 +13,9 @@ type DcfTitleProps = {
 
 export const DcfTitle = ({ stockId }: DcfTitleProps) => {
   const { data: user } = useGetProfileQuery();
-  const { data: favoriteStock } = useGetFavoriteQuery(stockId);
+  const { data: favoriteStock } = useGetFavoriteQuery(stockId, {
+    refetchOnMountOrArgChange: true,
+  });
   const [addFavorite] = useAddFavoriteMutation();
   const [deleteFavorite] = useDeleteFavoriteMutation();
 
