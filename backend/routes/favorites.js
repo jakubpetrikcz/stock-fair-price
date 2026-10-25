@@ -7,7 +7,6 @@ const router = Router();
 router.get('/', protect, async (req, res) => {
   try {
     const userId = req.user.id;
-    console.log('userId', userId);
     const getFavoriteStocks = await pool.query(
       `
       SELECT
@@ -32,12 +31,13 @@ router.get('/', protect, async (req, res) => {
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', protect, async (req, res) => {
   try {
+    const userId = req.user.id;
     const { id } = req.params;
     const getFavorite = await pool.query(
-      'SELECT * FROM favorites WHERE company_id = $1',
-      [id],
+      'SELECT * FROM favorites WHERE company_id = $1 AND favorites.user_id = $2',
+      [id, userId],
     );
     res.json(getFavorite.rows[0]);
   } catch (error) {

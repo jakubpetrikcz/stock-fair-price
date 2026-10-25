@@ -6,10 +6,12 @@ const protect = require('../middleware/auth.js');
 
 const router = Router();
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 const cookieOptions = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'none',
+  secure: isProduction,
+  sameSite: isProduction ? 'none' : 'Strict',
   maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
 };
 
@@ -66,7 +68,6 @@ router.post('/login', async (req, res) => {
   const user = await pool.query('SELECT * FROM users WHERE email = $1', [
     email,
   ]);
-  console.log('user', user);
 
   if (user.rows.length === 0) {
     return res.status(400).json({ message: 'Invalid credentials' });
