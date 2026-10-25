@@ -12,9 +12,6 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 
-console.log('process.env.CLIENT_URL', process.env.CLIENT_URL);
-console.log('PORT', PORT);
-
 app.use(
   cors({
     origin: process.env.CLIENT_URL || 'http://localhost:5173',
