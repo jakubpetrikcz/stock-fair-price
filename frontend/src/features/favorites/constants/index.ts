@@ -1,0 +1,1 @@
+export const FAVORITE = 'Favorite' as const;

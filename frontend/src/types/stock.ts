@@ -8,6 +8,9 @@ export type Stock = {
   cash_equivalents: string;
   total_debt: string;
   shares_outstanding: string;
+  dcf_fair_value: number;
+  dcf_growth_rate: number;
+  dcf_future_fcfs: FutureFcfs;
 };
 
 export type StockPrice = {
@@ -22,3 +25,18 @@ type FreeCashFlow = {
 };
 
 export type StockOptionType = Pick<Stock, 'ticker' | 'name'>;
+
+type FutureFcfs = {
+  future: number[];
+  pvOfFFCF: number[];
+};
+
+export type UpdateStockDcfPriceRequest = {
+  ticker: string;
+  userGrowthRate: number;
+};
+
+export type UpdateStockDcfPriceResponse = {
+  futureFcfs: FutureFcfs;
+  fairPrice: number;
+};
