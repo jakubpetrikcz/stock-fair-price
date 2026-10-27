@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { useRegisterUserMutation } from '../../stores/service/authApi';
 import { Input } from '../../components/ui/Input/Input';
 import { useForm, type SubmitHandler } from 'react-hook-form';
@@ -36,7 +36,7 @@ export const RegisterPage = () => {
   };
 
   return (
-    <div className='min-h-[80vh] flex items-center justify-center p-4'>
+    <div className='min-h-[80vh] flex flex-col items-center justify-center gap-2 p-4'>
       <form
         className='bg-white p-6 rounded shadow-md w-full max-w-lg'
         onSubmit={handleSubmit(onSubmit)}
@@ -58,6 +58,7 @@ export const RegisterPage = () => {
           Register
         </button>
       </form>
+      <Link to='/login'>Already have account? Login here</Link>
     </div>
   );
 };

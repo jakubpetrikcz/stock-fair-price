@@ -1,5 +1,5 @@
 import { useLoginUserMutation } from '../../stores/service/authApi';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { Input } from '../../components/ui/Input/Input';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { loginUserSchema, type LoginUserSchema } from '../schema/login';
@@ -32,7 +32,7 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className='min-h-[80vh] flex items-center justify-center p-4'>
+    <div className='min-h-[80vh] flex flex-col items-center justify-center gap-2 p-4'>
       <form onSubmit={handleSubmit(onSubmit)}>
         <h2>Login</h2>
         <Input {...register('email')} type='email' placeholder='email' />
@@ -48,6 +48,7 @@ export const LoginPage = () => {
           Login
         </button>
       </form>
+      <Link to='/register'>Don't have account? Register here</Link>
     </div>
   );
 };
