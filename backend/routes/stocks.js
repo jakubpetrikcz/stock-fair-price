@@ -79,6 +79,18 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/search', async (req, res) => {
+  try {
+    const getStocks = await pool.query(
+      'SELECT id, ticker, name FROM sec_companies ORDER BY ID',
+    );
+    res.json(getStocks.rows);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 router.get('/:ticker', async (req, res) => {
   try {
     const { ticker } = req.params;

@@ -36,7 +36,7 @@ router.get('/:id', protect, async (req, res) => {
     const userId = req.user.id;
     const { id } = req.params;
     const getFavorite = await pool.query(
-      'SELECT * FROM favorites WHERE company_id = $1 AND favorites.user_id = $2',
+      'SELECT * FROM favorites WHERE company_id = $1 AND user_id = $2',
       [id, userId],
     );
     res.json(getFavorite.rows[0]);
@@ -46,9 +46,10 @@ router.get('/:id', protect, async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', protect, async (req, res) => {
   try {
-    const { companyId, userId } = req.body;
+    const userId = req.user.id;
+    const { companyId } = req.body;
     const newFavoriteStock = await pool.query(
       'INSERT INTO favorites (company_id, user_id) VALUES($1, $2)',
       [companyId, userId],
@@ -60,12 +61,13 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', protect, async (req, res) => {
   try {
+    const userId = req.user.id;
     const { id } = req.params;
     const deleteFavoriteStock = await pool.query(
-      'DELETE FROM favorites WHERE id = $1',
-      [id],
+      'DELETE FROM favorites WHERE id = $1 AND user_id = $2',
+      [id, userId],
     );
     res.json('Favorite stock was deleted');
   } catch (error) {

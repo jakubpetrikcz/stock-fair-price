@@ -1,17 +1,16 @@
-import { useGetStocksQuery } from '../../api/stocksApi';
+import { useGetSearchStocksQuery } from '../../api/stocksApi';
 import { Autocomplete } from '../Autocomplete/Autocomplete';
 import { StockOption } from '../Autocomplete/StockOption';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectStock } from './stores/stocksSlice';
 import type { AppDispatch } from '../../stores/store';
 import { selectedStockSelector } from './stores/selectors';
-import type { StockOptionType } from '../../types/stock';
 
 export const StockAutocomplete = () => {
   const dispatch = useDispatch<AppDispatch>();
   const selectedStock = useSelector(selectedStockSelector);
 
-  const { data: stocks, isLoading, isError } = useGetStocksQuery();
+  const { data: stocks, isLoading, isError } = useGetSearchStocksQuery();
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -20,11 +19,6 @@ export const StockAutocomplete = () => {
   if (!stocks || isError) {
     return <div>Error...</div>;
   }
-
-  const stockOptions: StockOptionType[] = stocks.map((stock) => ({
-    ticker: stock.ticker,
-    name: stock.name,
-  }));
 
   const onSelected = (value: string) => dispatch(selectStock(value));
 
@@ -36,7 +30,7 @@ export const StockAutocomplete = () => {
         renderOptions={(setValue, value, setFocused) => {
           const normalizeValue = value.toLowerCase();
           return normalizeValue === selectedStock.toLowerCase()
-            ? stockOptions.map((stock) => (
+            ? stocks.map((stock) => (
                 <StockOption
                   key={stock.ticker}
                   stock={stock}
@@ -45,7 +39,7 @@ export const StockAutocomplete = () => {
                   setFocused={setFocused}
                 />
               ))
-            : stockOptions
+            : stocks
                 .filter((stock) => {
                   const stockSelect =
                     `${stock.ticker} - ${stock.name}`.toLowerCase();
