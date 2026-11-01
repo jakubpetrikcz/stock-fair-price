@@ -13,8 +13,8 @@ export const stocksApi = createApi({
   tagTypes: [STOCK],
   baseQuery: fetchBaseQuery({ baseUrl: API_URL }),
   endpoints: (builder) => ({
-    getStocks: builder.query<Stock[], void>({
-      query: () => '/stocks',
+    getSearchStocks: builder.query<Stock[], void>({
+      query: () => '/stocks/search',
     }),
     getStock: builder.query<Stock, string>({
       query: (ticker) => `/stocks/${ticker}`,
@@ -38,7 +38,7 @@ export const stocksApi = createApi({
 });
 
 export const {
-  useGetStocksQuery,
+  useGetSearchStocksQuery,
   useGetStockQuery,
   useGetStockPriceQuery,
   useUpdateStockDcfPriceMutation,
