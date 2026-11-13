@@ -2,7 +2,7 @@ import { FcfTable } from './components/FcfTable';
 import { FutureFcfTable } from './components/FutureFcfTable';
 import { PricePerShareTable } from './components/PricePerShareTable';
 import { roundToMillions } from '../../utils/roundToMillions';
-import { useGetStockQuery } from '../../api/stocksApi';
+import { useGetDcfStockQuery, useGetStockQuery } from '../../api/stocksApi';
 import { CurrentPriceTable } from './components/CurrentPriceTable';
 import { DcfTitle } from './DcfTitle';
 
@@ -12,12 +12,17 @@ type DcfProps = {
 
 export const Dcf = ({ ticker }: DcfProps) => {
   const { data: stock, isLoading, isError } = useGetStockQuery(ticker);
+  const {
+    data: dcfStock,
+    isLoading: isDcfLoading,
+    isError: isDcfError,
+  } = useGetDcfStockQuery(ticker);
 
-  if (isLoading) {
+  if (isLoading || isDcfLoading) {
     return <div>Loading...</div>;
   }
 
-  if (!stock || isError) {
+  if (!stock || isError || isDcfError) {
     return <div>Error...</div>;
   }
 
@@ -42,8 +47,8 @@ export const Dcf = ({ ticker }: DcfProps) => {
   const cashEquivalents = roundToMillions(Number(stock.cash_equivalents));
   const totalDebt = roundToMillions(Number(stock.total_debt));
 
-  const fairPrice = stock.dcf_fair_value;
-  const futureFcfs = stock.dcf_future_fcfs || { future: [], pvOfFFCF: [] };
+  const futureFcfs = dcfStock?.future_fcfs || stock.dcf_future_fcfs;
+  const fairPrice = dcfStock?.fair_value ?? stock.dcf_fair_value;
 
   return (
     <div className='mt-5'>
@@ -67,7 +72,7 @@ export const Dcf = ({ ticker }: DcfProps) => {
         ticker={ticker}
         cashFlows={cashFlows}
         years={years}
-        dcf_growth_rate={stock.dcf_growth_rate}
+        dcf_growth_rate={dcfStock?.growth_rate}
       />
       <FutureFcfTable
         futureFcf={futureFcfs.future}

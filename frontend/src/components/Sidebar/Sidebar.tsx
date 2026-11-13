@@ -3,12 +3,18 @@ import { NavMenu } from '../NavMenu/NavMenu';
 import classNames from 'classnames';
 import { LogoContainer } from '../LogoContainer/LogoContainer';
 import {
+  authApi,
   useGetProfileQuery,
   useLogoutUserMutation,
 } from '../../stores/service/authApi';
 import { useNavigate } from 'react-router';
+import { useDispatch } from 'react-redux';
+import type { AppDispatch } from '../../stores/store';
+import { stocksApi } from '../../api/stocksApi';
+import { favoritesApi } from '../../features/favorites/api/favoritesApi';
 
 export const Sidebar = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const { data: user } = useGetProfileQuery();
   const [isOpen, setIsOpen] = useState(true);
   const navigate = useNavigate();
@@ -17,6 +23,10 @@ export const Sidebar = () => {
 
   const handleLogout = async () => {
     await logoutUser().unwrap();
+
+    dispatch(stocksApi.util.resetApiState());
+    dispatch(favoritesApi.util.resetApiState());
+    dispatch(authApi.util.resetApiState());
 
     navigate('/');
   };

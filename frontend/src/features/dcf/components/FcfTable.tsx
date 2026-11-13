@@ -1,4 +1,4 @@
-import { useEffect, useEffectEvent, useState } from 'react';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { getGrowthRate } from '../utils/getGrowthRate';
 import { blockInvalidCharacters } from '../../../utils/blockInvalidCharacters';
 import { useUpdateStockDcfPriceMutation } from '../../../api/stocksApi';
@@ -9,7 +9,7 @@ type FcfTableProps = {
   ticker: string;
   cashFlows: number[];
   years: number[];
-  dcf_growth_rate: number;
+  dcf_growth_rate?: number;
 };
 
 export const FcfTable = ({
@@ -18,6 +18,7 @@ export const FcfTable = ({
   years,
   dcf_growth_rate,
 }: FcfTableProps) => {
+  const growthRateChanged = useRef(false);
   const [updateStockDcfPrice] = useUpdateStockDcfPriceMutation();
 
   const [userGrowthRate, setUserGrowthRate] = useState<string | number>(
@@ -35,12 +36,10 @@ export const FcfTable = ({
   );
 
   useEffect(() => {
+    if (!growthRateChanged.current) return;
+
     onUpdateStockDcfPrice(debouncedGrowthRate);
   }, [debouncedGrowthRate]);
-
-  useEffect(() => {
-    setUserGrowthRate(dcf_growth_rate);
-  }, [dcf_growth_rate]);
 
   const { growths, averageGrowthRate } = getGrowthRate(cashFlows);
 
@@ -84,6 +83,7 @@ export const FcfTable = ({
                   onChange={(e) => {
                     const val = e.target.value.replace('%', '');
                     if (!isNaN(Number(val))) {
+                      growthRateChanged.current = true;
                       setUserGrowthRate(val);
                     }
                   }}
