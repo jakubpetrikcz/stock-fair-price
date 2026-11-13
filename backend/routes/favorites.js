@@ -15,13 +15,17 @@ router.get('/', protect, async (req, res) => {
         favorites.user_id,
         sec_companies.ticker,
         sec_companies.name,
-        sec_companies.dcf_fair_value
+      COALESCE(user_dcf_valuations.fair_value, sec_companies.dcf_fair_value)
+        AS dcf_fair_value
       FROM favorites
       JOIN sec_companies
         ON sec_companies.id = favorites.company_id
+      LEFT JOIN user_dcf_valuations
+        ON user_dcf_valuations.company_id = sec_companies.id
+        AND user_dcf_valuations.user_id = favorites.user_id
       WHERE favorites.user_id = $1
       ORDER BY favorites.id
-    `,
+      `,
       [userId],
     );
     res.json(getFavoriteStocks.rows);
