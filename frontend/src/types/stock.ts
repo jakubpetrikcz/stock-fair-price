@@ -13,6 +13,12 @@ export type Stock = {
   dcf_future_fcfs: FutureFcfs;
 };
 
+export type DcfStock = {
+  growth_rate: number;
+  future_fcfs: FutureFcfs;
+  fair_value: number;
+}
+
 export type StockPrice = {
   ticker: string;
   price: number;

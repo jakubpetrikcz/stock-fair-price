@@ -20,7 +20,9 @@ export const StockAutocomplete = () => {
     return <div>Error...</div>;
   }
 
-  const onSelected = (value: string) => dispatch(selectStock(value));
+  const onSelected = (value: string) => {
+    dispatch(selectStock(value));
+  };
 
   return (
     <div className='flex gap-2'>
