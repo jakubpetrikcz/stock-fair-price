@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API_URL } from '../api';
 import { STOCK } from '../constants';
 import type {
+  DcfStock,
   Stock,
   StockPrice,
   UpdateStockDcfPriceRequest,
@@ -11,13 +12,17 @@ import type {
 export const stocksApi = createApi({
   reducerPath: 'stocksApi',
   tagTypes: [STOCK],
-  baseQuery: fetchBaseQuery({ baseUrl: API_URL }),
+  baseQuery: fetchBaseQuery({ baseUrl: API_URL, credentials: 'include' }),
   endpoints: (builder) => ({
-    getStocks: builder.query<Stock[], void>({
-      query: () => '/stocks',
+    getSearchStocks: builder.query<Stock[], void>({
+      query: () => '/stocks/search',
     }),
     getStock: builder.query<Stock, string>({
       query: (ticker) => `/stocks/${ticker}`,
+      providesTags: [STOCK],
+    }),
+    getDcfStock: builder.query<DcfStock, string>({
+      query: (ticker) => `/stocks/${ticker}/dcf`,
       providesTags: [STOCK],
     }),
     getStockPrice: builder.query<StockPrice, string>({
@@ -38,8 +43,9 @@ export const stocksApi = createApi({
 });
 
 export const {
-  useGetStocksQuery,
+  useGetSearchStocksQuery,
   useGetStockQuery,
+  useGetDcfStockQuery,
   useGetStockPriceQuery,
   useUpdateStockDcfPriceMutation,
 } = stocksApi;

@@ -15,13 +15,17 @@ router.get('/', protect, async (req, res) => {
         favorites.user_id,
         sec_companies.ticker,
         sec_companies.name,
-        sec_companies.dcf_fair_value
+      COALESCE(user_dcf_valuations.fair_value, sec_companies.dcf_fair_value)
+        AS dcf_fair_value
       FROM favorites
       JOIN sec_companies
         ON sec_companies.id = favorites.company_id
+      LEFT JOIN user_dcf_valuations
+        ON user_dcf_valuations.company_id = sec_companies.id
+        AND user_dcf_valuations.user_id = favorites.user_id
       WHERE favorites.user_id = $1
       ORDER BY favorites.id
-    `,
+      `,
       [userId],
     );
     res.json(getFavoriteStocks.rows);
@@ -36,7 +40,7 @@ router.get('/:id', protect, async (req, res) => {
     const userId = req.user.id;
     const { id } = req.params;
     const getFavorite = await pool.query(
-      'SELECT * FROM favorites WHERE company_id = $1 AND favorites.user_id = $2',
+      'SELECT * FROM favorites WHERE company_id = $1 AND user_id = $2',
       [id, userId],
     );
     res.json(getFavorite.rows[0]);
@@ -46,9 +50,10 @@ router.get('/:id', protect, async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', protect, async (req, res) => {
   try {
-    const { companyId, userId } = req.body;
+    const userId = req.user.id;
+    const { companyId } = req.body;
     const newFavoriteStock = await pool.query(
       'INSERT INTO favorites (company_id, user_id) VALUES($1, $2)',
       [companyId, userId],
@@ -60,12 +65,13 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', protect, async (req, res) => {
   try {
+    const userId = req.user.id;
     const { id } = req.params;
     const deleteFavoriteStock = await pool.query(
-      'DELETE FROM favorites WHERE id = $1',
-      [id],
+      'DELETE FROM favorites WHERE id = $1 AND user_id = $2',
+      [id, userId],
     );
     res.json('Favorite stock was deleted');
   } catch (error) {

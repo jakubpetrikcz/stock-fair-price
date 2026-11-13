@@ -16,14 +16,11 @@ export const favoritesApi = createApi({
       query: (favoriteId) => `/favorites/${favoriteId}`,
       providesTags: [FAVORITE],
     }),
-    addFavorite: builder.mutation<
-      unknown,
-      { companyId: string; userId: string }
-    >({
-      query: ({ companyId, userId }) => ({
+    addFavorite: builder.mutation<unknown, { companyId: string }>({
+      query: ({ companyId }) => ({
         url: '/favorites',
         method: 'POST',
-        body: { companyId, userId },
+        body: { companyId },
       }),
       invalidatesTags: [FAVORITE],
     }),

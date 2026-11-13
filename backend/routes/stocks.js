@@ -2,6 +2,7 @@ const { Router } = require('express');
 const { execFile } = require('node:child_process');
 const path = require('node:path');
 const pool = require('../config/dbConfig.js');
+const protect = require('../middleware/auth.js');
 const roundToMillions = require('../utils/roundToMillions.js');
 const getFutureFcfs = require('../utils/getFutureFcfs.js');
 const calculateDcfFairPrice = require('../utils/calculateDcfFairPrice.js');
@@ -79,6 +80,18 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/search', async (req, res) => {
+  try {
+    const getStocks = await pool.query(
+      'SELECT id, ticker, name FROM sec_companies ORDER BY ID',
+    );
+    res.json(getStocks.rows);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 router.get('/:ticker', async (req, res) => {
   try {
     const { ticker } = req.params;
@@ -110,8 +123,35 @@ router.get('/:ticker/price', async (req, res) => {
   }
 });
 
-router.put('/:ticker/dcf', async (req, res) => {
+router.get('/:ticker/dcf', protect, async (req, res) => {
   try {
+    const userId = req.user.id;
+    const { ticker } = req.params;
+
+    const getDcfStock = await pool.query(
+      `SELECT
+        fair_value,
+        growth_rate,
+        future_fcfs
+      FROM user_dcf_valuations
+      WHERE user_id = $1
+      AND company_id = (
+        SELECT id
+        FROM sec_companies
+        WHERE ticker = $2
+      )`,
+      [userId, ticker],
+    );
+    res.json(getDcfStock.rows[0]);
+  } catch (error) {
+    console.error(error.message);
+    res.status(503).json({ error: 'Current stock is unavailable' });
+  }
+});
+
+router.put('/:ticker/dcf', protect, async (req, res) => {
+  try {
+    const userId = req.user.id;
     const { ticker } = req.params;
     const { userGrowthRate } = req.body;
 
@@ -147,8 +187,14 @@ router.put('/:ticker/dcf', async (req, res) => {
     );
 
     await pool.query(
-      'UPDATE sec_companies SET dcf_growth_rate = $2, dcf_fair_value = $3, dcf_future_fcfs = $4 WHERE ticker = $1',
-      [ticker, userGrowthRate, fairPrice, futureFcfs],
+      `INSERT INTO user_dcf_valuations (user_id, company_id, growth_rate, fair_value, future_fcfs) 
+       VALUES ($1, $2, $3, $4, $5) 
+       ON CONFLICT (user_id, company_id) DO UPDATE SET
+          growth_rate = EXCLUDED.growth_rate,
+          fair_value = EXCLUDED.fair_value,
+          future_fcfs = EXCLUDED.future_fcfs
+       RETURNING *`,
+      [userId, stock.id, userGrowthRate, fairPrice, futureFcfs],
     );
 
     res.json({ futureFcfs, fairPrice });
